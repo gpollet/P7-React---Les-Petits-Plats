@@ -55,7 +55,7 @@ function cropDescriptions() {
   const description = document.querySelectorAll(".recipe-card_description")
   for (let desc of description) {
     if (desc.textContent.length > 175) {
-      desc.textContent = `${desc.textContent.slice(0, 175)}...`
+      desc.textContent = `${desc.textContent.slice(0, 170)}...`
     }
   }
 }

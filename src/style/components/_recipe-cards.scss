@@ -2,19 +2,26 @@
 
 .recipe-card {
   &_container {
-    flex-basis: 30%;
+    @media (max-width: 767px) {
+      width: 100%;
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
+      width: 45%;
+    }
+    width: 30%;
+    min-width: 15em;
     background-color: var.$background-lightgray;
     margin-bottom: 3em;
     border-radius: var.$recipe-card_border-radius;
     text-decoration: none;
     color: black;
-    height: 40em;
   }
   &_picture {
     border-radius: var.$recipe-card_border-radius var.$recipe-card_border-radius
       0 0;
     width: 100%;
-    height: 20em;
+    min-height: 20em;
+    height: 45%;
     background-color: #c7bebe;
     object-fit: cover;
   }
@@ -23,6 +30,7 @@
     justify-content: space-between;
     align-items: center;
     font-weight: 700;
+    height: 8%;
     & span {
       font-size: 1.5em;
       & svg {
@@ -34,17 +42,17 @@
   &_bottom {
     display: flex;
     margin-left: 0;
-    height: 10em;
-    width: 33em;
+    max-height: 42%;
   }
   &_ingredients-list {
     flex-basis: 45%;
+    list-style: none;
     &_ingredient-name {
       font-weight: 700;
     }
   }
   &_description {
-    min-width: 0px;
+    padding: 0 1em;
     flex-basis: 50%;
     font-family: "Roboto";
   }
