@@ -50,11 +50,11 @@ function trackTopFilterChevronDirection() {
   }
 }
 
-// Crops descriptions longer than 175 characters, and adds "..." at the end of the description instead
+// Crops descriptions longer than 170 characters, and adds "..." at the end of the description instead
 function cropDescriptions() {
   const description = document.querySelectorAll(".recipe-card_description")
   for (let desc of description) {
-    if (desc.textContent.length > 175) {
+    if (desc.textContent.length > 170) {
       desc.textContent = `${desc.textContent.slice(0, 170)}...`
     }
   }
