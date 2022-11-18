@@ -19,6 +19,7 @@ export class Recipe {
     const cardContainer = document.createElement("div")
     cardContainer.classList = "recipe-card_container"
     cardContainer.setAttribute("data-card-id", this.id)
+    cardContainer.setAttribute("tabindex", "0")
     createRecipeCard(cardContainer, this, this.getMediaFilename())
     container.appendChild(cardContainer)
     this.ingredients.map((ingredient) =>

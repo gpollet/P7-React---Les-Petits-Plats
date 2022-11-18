@@ -18,18 +18,28 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-weight: 700;
+    & span {
+      font-size: 1.5em;
+      & svg {
+        height: 1em;
+        margin-right: 10px;
+      }
+    }
   }
   &_bottom {
     display: flex;
-    //justify-content: space-between;
-    //padding: 0 1em;
     margin-left: 0;
   }
   &_ingredients-list {
   flex-basis: 45%;
+  &_ingredient-name {
+    font-weight: 700;
+  }
   }
   &_description {
     flex-basis: 50%;
+    font-family: 'Roboto';
   }
   &_placeholder {
     visibility: hidden;
