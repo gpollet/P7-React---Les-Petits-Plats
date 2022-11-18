@@ -16,9 +16,12 @@ export class Recipe {
   }
 
   displayRecipeCard(container) {
-    const cardContainer = document.createElement("div")
+    const cardContainer = document.createElement("a")
+    cardContainer.href = "#"
     cardContainer.classList = "recipe-card_container"
+    cardContainer.ariaLabel = this.name
     cardContainer.setAttribute("data-card-id", this.id)
+    cardContainer.setAttribute("tabindex", "0")
     createRecipeCard(cardContainer, this, this.getMediaFilename())
     container.appendChild(cardContainer)
     this.ingredients.map((ingredient) =>

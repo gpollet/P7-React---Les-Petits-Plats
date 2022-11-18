@@ -2,34 +2,59 @@
 
 .recipe-card {
   &_container {
-    flex-basis: 30%;
+    @media (max-width: 767px) {
+      width: 100%;
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
+      width: 45%;
+    }
+    width: 30%;
+    min-width: 15em;
     background-color: var.$background-lightgray;
     margin-bottom: 3em;
     border-radius: var.$recipe-card_border-radius;
+    text-decoration: none;
+    color: black;
   }
   &_picture {
-    border-radius: var.$recipe-card_border-radius var.$recipe-card_border-radius 0 0;
+    border-radius: var.$recipe-card_border-radius var.$recipe-card_border-radius
+      0 0;
     width: 100%;
-    height: 20em;
-    background-color: #C7BEBE;
+    min-height: 20em;
+    height: 45%;
+    background-color: #c7bebe;
     object-fit: cover;
   }
   &_title {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-weight: 700;
+    height: 8%;
+    & span {
+      font-size: 1.5em;
+      & svg {
+        height: 1em;
+        margin-right: 10px;
+      }
+    }
   }
   &_bottom {
     display: flex;
-    //justify-content: space-between;
-    //padding: 0 1em;
     margin-left: 0;
+    max-height: 42%;
   }
   &_ingredients-list {
-  flex-basis: 45%;
+    flex-basis: 45%;
+    list-style: none;
+    &_ingredient-name {
+      font-weight: 700;
+    }
   }
   &_description {
+    padding: 0 1em;
     flex-basis: 50%;
+    font-family: "Roboto";
   }
   &_placeholder {
     visibility: hidden;

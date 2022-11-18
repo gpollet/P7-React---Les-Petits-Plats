@@ -1,12 +1,35 @@
 .top-filters {
   &_container {
+    display: flex;
+    flex-wrap: wrap;
     margin: 1em 0;
-    & button {
-      height: 69px;
-      width: 170px;
-      //border-style: none;
+    & label {
+      display: flex;
+      position: relative;
+      margin-right: 2em;
+      margin-bottom: 2em;
+      & svg {
+        position: absolute;
+        fill: white;
+        height: 1.8em;
+        right: 1em;
+        top: 1.4em;
+      }
+    }
+    & input {
+      height: 4em;
+      width: 100%;
+      min-width: 6em;
+      border: none;
       border-radius: 5px;
       color: white;
+      font-weight: 700;
+      font-size: 19px;
+      text-align: left;
+      padding-left: 1em;
+      &::placeholder {
+        color: white;
+      }
     }
   }
   &_ingredients {
