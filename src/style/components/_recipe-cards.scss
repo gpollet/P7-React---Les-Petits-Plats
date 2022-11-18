@@ -6,6 +6,8 @@
     background-color: var.$background-lightgray;
     margin-bottom: 3em;
     border-radius: var.$recipe-card_border-radius;
+    text-decoration: none;
+    color: black;
   }
   &_picture {
     border-radius: var.$recipe-card_border-radius var.$recipe-card_border-radius 0 0;
