@@ -17,6 +17,7 @@ export function displayHome(data) {
   const recipeCards = data.map((recipe) =>
     new Recipe(recipe).displayRecipeCard(recipeListContainer)
   )
+  cropDescriptions()
   lastRowRecipeList(recipeCards, recipeListContainer)
   trackTopFilterChevronDirection()
 }
@@ -46,5 +47,15 @@ function trackTopFilterChevronDirection() {
       "focusout",
       () => (inputField.nextElementSibling.outerHTML = chevronDownIcon)
     )
+  }
+}
+
+// Crops descriptions longer than 175 characters, and adds "..." at the end of the description instead
+function cropDescriptions() {
+  const description = document.querySelectorAll(".recipe-card_description")
+  for (let desc of description) {
+    if (desc.textContent.length > 175) {
+      desc.textContent = `${desc.textContent.slice(0, 175)}...`
+    }
   }
 }

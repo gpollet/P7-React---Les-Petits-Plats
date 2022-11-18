@@ -8,12 +8,14 @@
     border-radius: var.$recipe-card_border-radius;
     text-decoration: none;
     color: black;
+    height: 40em;
   }
   &_picture {
-    border-radius: var.$recipe-card_border-radius var.$recipe-card_border-radius 0 0;
+    border-radius: var.$recipe-card_border-radius var.$recipe-card_border-radius
+      0 0;
     width: 100%;
     height: 20em;
-    background-color: #C7BEBE;
+    background-color: #c7bebe;
     object-fit: cover;
   }
   &_title {
@@ -32,16 +34,19 @@
   &_bottom {
     display: flex;
     margin-left: 0;
+    height: 10em;
+    width: 33em;
   }
   &_ingredients-list {
-  flex-basis: 45%;
-  &_ingredient-name {
-    font-weight: 700;
-  }
+    flex-basis: 45%;
+    &_ingredient-name {
+      font-weight: 700;
+    }
   }
   &_description {
+    min-width: 0px;
     flex-basis: 50%;
-    font-family: 'Roboto';
+    font-family: "Roboto";
   }
   &_placeholder {
     visibility: hidden;
