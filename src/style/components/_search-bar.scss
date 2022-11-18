@@ -1,0 +1,11 @@
+@use "../variables" as var;
+
+.top-search {
+  &_bar {
+    width: 100%;
+    height: 4em;
+    border-radius: 5px;
+    background-color: var.$background-lightgray;
+    margin: 1em 0;
+  }
+}

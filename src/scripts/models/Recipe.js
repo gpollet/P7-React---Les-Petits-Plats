@@ -1,5 +1,7 @@
-import { createIngredientsList, createRecipeCard } from "../components/recipe-card.js"
-import { Ingredient } from "./Ingredient.js"
+import {
+  createIngredientsList,
+  createRecipeCard,
+} from "../components/recipe-card.js"
 
 export class Recipe {
   constructor(recipe) {
@@ -15,9 +17,21 @@ export class Recipe {
 
   displayRecipeCard(container) {
     const cardContainer = document.createElement("div")
-    createRecipeCard(cardContainer, this)
+    cardContainer.classList = "recipe-card_container"
+    cardContainer.setAttribute("data-card-id", this.id)
+    createRecipeCard(cardContainer, this, this.getMediaFilename())
     container.appendChild(cardContainer)
-    const recipeIngredients = this.ingredients.map((ingredient) => new Ingredient(ingredient))
-    createIngredientsList(this.id, recipeIngredients)
+    this.ingredients.map((ingredient) =>
+      createIngredientsList(this.id, ingredient)
+    )
+  }
+
+  getMediaFilename() {
+    return this.name
+      .toLowerCase()
+      .replace(/[ ]/g, "-")
+      .replace(/[,]/g, "")
+      .replace(/[éèêë]/g, "e")
+      .replace(/[àâä]/g, "a")
   }
 }

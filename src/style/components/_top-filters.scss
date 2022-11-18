@@ -1,0 +1,21 @@
+.top-filters {
+  &_container {
+    margin: 1em 0;
+    & button {
+      height: 69px;
+      width: 170px;
+      //border-style: none;
+      border-radius: 5px;
+      color: white;
+    }
+  }
+  &_ingredients {
+    background-color: #3282f7;
+  }
+  &_appareils {
+    background-color: #68d9a4;
+  }
+  &_ustensiles {
+    background-color: #ed6454;
+  }
+}
