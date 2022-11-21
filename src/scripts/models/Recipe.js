@@ -2,6 +2,8 @@ import {
   createIngredientsList,
   createRecipeCard,
 } from "../components/recipe-card.js"
+import { dataset } from "../store/store.js"
+import { Filter } from "./Filter.js"
 
 export class Recipe {
   constructor(recipe) {
@@ -27,6 +29,7 @@ export class Recipe {
     this.ingredients.map((ingredient) =>
       createIngredientsList(this.id, ingredient)
     )
+    //new Filter(this.ingredients.map(ingredient => ingredient.ingredient)).fillStoreData()
   }
 
   getMediaFilename() {
