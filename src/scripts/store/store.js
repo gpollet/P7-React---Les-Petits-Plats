@@ -8,4 +8,4 @@ export let dataIngredients
 export let dataAppliances
 export let dataUstensils
 
-export let dataset = { ingredients: [], appliance: [], ustensils: []}
+export let dataset = { appliance: [], ustensils: [], ingredient: []}

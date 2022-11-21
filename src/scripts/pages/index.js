@@ -20,8 +20,8 @@ export function displayHome(data) {
   main.appendChild(recipeListContainer)
   const recipeCards = data.map((recipe) => {
     new Recipe(recipe).displayRecipeCard(recipeListContainer)
-    createStoreDataset(recipe)
   })
+  createStoreDataset(data)
   console.log(dataset)
   sortStoreDataset()
   createTopFiltersSuggestions()
@@ -50,29 +50,89 @@ function cropDescriptions() {
 }
 
 // Creates a list of all possible ingredients, appliances and ustensils based on the recipes data
-const createStoreDataset = (recipe) => {
-  Object.entries(recipe).forEach(([key, value]) => {
-    if (Object.keys(dataset).includes(key) && !dataset[key].includes(value)) {
-      if (typeof value == "string") dataset[key].push(value)
-      if (typeof value == "object") {
-        let currentCategory = key
-        let oldValue = Object.entries(value)
-        for (let [key, value] of oldValue) {
-          if (value.ingredient) {
-            value = value.ingredient
-          }
-          // Checks if ingredient already exists even if it was written in singular/plural to avoid duplicates
-          if (
-            typeof value == "string" &&
-            !dataset[currentCategory].includes(value) &&
-            !dataset.ingredients.includes(value.slice(0, value.length - 1))
-          ) {
-            dataset[currentCategory].push(value)
-          }
-        }
-      }
+function createStoreDataset(recipes) {
+  recipes.map((recipes) => {
+    for (let recipe of [recipes]) {
+      loopThroughArray(recipe)
     }
   })
+
+  function loopThroughArray(data) {
+    for (let entry of [data]) {
+      Object.entries(entry).forEach(([key, value]) => {
+        if (dataset[key] !== undefined)
+          if (
+            typeof value == "string" &&
+            !Object.values(dataset[key]).includes(value) &&
+            !dataset[key].includes(value.slice(0, value.length - 1))
+          ) {
+            dataset[key].push(value)
+          }
+        if (typeof value == "object") {
+          if (value.length) {
+            for (let array of value) {
+              loopThroughArray({ [key]: array })
+            }
+          }
+          loopThroughArray(value)
+        }
+      })
+    }
+  }
+    //console.log(data)
+    //return
+    //Object.entries(data).map(([key, value]) => {
+    //  if (typeof value == "string" && !Object.keys(dataset).includes(value)) {
+    //    dataset[key].push(value)
+    //    delete data[key]
+    //  } else if (typeof value == "object") {
+    //    if (value.length == 1) {
+    //      dataset[key].push(value.toString())
+    //      delete data[key]
+    //      //console.log(data)
+    //    }
+    //    //let oldData = data
+    //    //loopThroughArray(oldData)
+    //    //console.log(Object.entries(value))
+    //    //return loopThroughArray(data)
+    //  }
+    //})
+  //console.log(recipes[1])
+  //for (let recipe of recipes) {
+  //  loopThroughArray(recipe)
+  //    }
+  //console.log(recipes)
+  //loopThroughArray(recipes)
+  //return
+  //for (let [key, value] of Object.entries(recipe)) {
+  //  //if (Object.keys(dataset).includes(key) && !dataset[key].includes(value)) {
+  //  //if (typeof value == "string") dataset[key].push(value)
+  //  if (typeof value == "object") {
+  //    let currentCategory = key
+  //    let oldValue = Object.entries(value)
+  //    let test = value.map((entries) => {
+  //      Object.entries(entries).forEach(([key, value]) => {
+  //        //console.log(Object.keys(dataset).includes(key))
+  //        //console.log(key)
+  //      })
+  //    })
+  //    for (let [key, value] of oldValue) {
+  //      //console.log(key, value)
+  //      if (value.ingredient) {
+  //        value = value.ingredient
+  //      }
+  //      // Checks if ingredient already exists even if it was written in singular/plural to avoid duplicates
+  //      if (
+  //        typeof value == "string" &&
+  //        !dataset[currentCategory].includes(value) &&
+  //        !dataset.ingredients.includes(value.slice(0, value.length - 1))
+  //      ) {
+  //        //dataset[currentCategory].push(value)
+  //      }
+  //    }
+  //    //}
+  //  }
+  //}
 
   //recipe.ingredients.map((ingredient) => {
   //  if (
