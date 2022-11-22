@@ -35,7 +35,7 @@
         min-width: 3em;
         max-width: 5.1em;
       }
-      @media (min-width:769px) and (max-width:1024px) {
+      @media (min-width: 769px) and (max-width: 1024px) {
         //min-width: 6em;
         max-width: 6em;
       }
@@ -51,7 +51,7 @@
       }
     }
   }
-  &_ingredients {
+  &_ingredient {
     background-color: #3282f7;
   }
   &_appareils {
@@ -63,16 +63,21 @@
   &_container {
     position: relative;
   }
-  &_suggestions-container {
-    width: 100%;
-    margin-right: 2em;
-    height: 5em;
-    background-color: #68d9a4;
-    &[data-filter-visibility="hidden"] {
-      display: none;
+  &_suggestions {
+    &-container {
+      width: 100%;
+      margin-right: 2em;
+      height: 5em;
+      background-color: #68d9a4;
+      &[data-filter-visibility="hidden"] {
+        display: none;
+      }
+      &[data-filter-visibility="visible"] {
+        display: block;
+      }
     }
-    &[data-filter-visibility="visible"] {
-      display: block;
+    &-list li {
+      text-transform: capitalize;
     }
   }
 }

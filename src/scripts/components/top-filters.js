@@ -4,18 +4,18 @@ export const createRecipeFilters = (container) => {
   container.innerHTML += `<div class="top-filters-list_container">
 <div class="top-filters_container">
 <label>
-<input class="top-filters_ingredients" name="ingredients" placeholder="Ingrédients" aria-label="Rechercher par ingrédients"></input>${chevronDownIcon}
+<input class="top-filters_ingredient" name="ingredient" placeholder="Ingrédients" aria-label="Rechercher par ingrédients"></input>${chevronDownIcon}
 </label>
-<div class="top-filters_suggestions-container" data-filter-visibility="hidden" data-filter-category="ingredients">
-<ul class="top-filters_suggestions-list"></ul>
+<div class="top-filters_suggestions-container" data-filter-visibility="hidden" data-filter-category="ingredient">
+<ul class="top-filters_suggestions-list" data-filter-list-category="ingredient"></ul>
 </div></div>
 
 <div class="top-filters_container">
 <label>
-<input class="top-filters_appareils" name="appliances" placeholder="Appareils" aria-label="Rechercher par appareils"></input>${chevronDownIcon}
+<input class="top-filters_appareils" name="appliance" placeholder="Appareils" aria-label="Rechercher par appareils"></input>${chevronDownIcon}
 </label>
-<div class="top-filters_suggestions-container" data-filter-visibility="hidden" data-filter-category="appliances">
-<ul class="top-filters_suggestions-list"></ul>
+<div class="top-filters_suggestions-container" data-filter-visibility="hidden" data-filter-category="appliance">
+<ul class="top-filters_suggestions-list" data-filter-list-category="appliance"></ul>
 </div></div>
 
 <div class="top-filters_container">
@@ -24,7 +24,7 @@ export const createRecipeFilters = (container) => {
 ${chevronDownIcon}
 </label>
 <div class="top-filters_suggestions-container" data-filter-visibility="hidden" data-filter-category="ustensils">
-<ul class="top-filters_suggestions-list"></ul>
+<ul class="top-filters_suggestions-list" data-filter-list-category="ustensils"></ul>
 </div></div>
 </div>`
 }
@@ -46,23 +46,28 @@ export const trackTopFilterChevronDirection = () => {
 }
 
 export const createTopFiltersSuggestions = () => {
-  const topFilters = document.querySelectorAll(".top-filters_suggestions-list")
+  const topFilters = document.querySelectorAll(".top-filters_container")
+  //let test = document.querySelector(".top-filters_ingredients").addEventListener("click", () => {console.log("test")})
   for (let topFilter of topFilters) {
+    // For each top filter category, retrieves the category name and populates the top filter with the corresponding entries from the Store
     for (let [key, value] of Object.entries(dataset)) {
-      if (topFilter.parentNode.dataset.filterCategory == key) {
-        value.map((el) => {
-          const suggestionListItem = document.createElement("li")
-          suggestionListItem.textContent += el
-          topFilter.appendChild(suggestionListItem)
-        })
-      }
+      const topFilterList = document.querySelector(
+        `[data-filter-list-category=${key}].top-filters_suggestions-list`
+      )
+      value.map((el) => {
+        const suggestionListItem = document.createElement("li")
+        suggestionListItem.textContent += el
+        topFilterList.appendChild(suggestionListItem)
+      })
     }
+    let filterSuggestionsContainer
     topFilter.addEventListener("focusin", (event) => {
-      const filterSuggestionsContainer = event.target.parentNode.nextElementSibling
+      filterSuggestionsContainer = document.querySelector(
+        `[data-filter-category=${event.target.name}].top-filters_suggestions-container`
+      )
       filterSuggestionsContainer.setAttribute("data-filter-visibility", "visible")
     })
     topFilter.addEventListener("focusout", (event) => {
-      const filterSuggestionsContainer = event.target.parentNode.nextElementSibling
       filterSuggestionsContainer.setAttribute("data-filter-visibility", "hidden")
     })
   }
