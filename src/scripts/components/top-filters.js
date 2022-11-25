@@ -1,32 +1,28 @@
-import { chevronDownIcon, chevronUpIcon, dataset } from "../store/store.js"
+import { chevronDownIcon, chevronUpIcon, dataset, filterDisplayStatus } from "../store/store.js"
 
-export const createRecipeFilters = (container) => {
-  container.innerHTML += `<div class="top-filters-list_container">
-<div class="top-filters_container">
-<label>
-<input class="top-filters_ingredient" name="ingredient" placeholder="Ingrédients" aria-label="Rechercher par ingrédients"></input>${chevronDownIcon}
-</label>
-<div class="top-filters_suggestions-container" data-filter-visibility="hidden" data-filter-category="ingredient">
-<ul class="top-filters_suggestions-list" data-filter-list-category="ingredient"></ul>
-</div></div>
-
-<div class="top-filters_container">
-<label>
-<input class="top-filters_appareils" name="appliance" placeholder="Appareils" aria-label="Rechercher par appareils"></input>${chevronDownIcon}
-</label>
-<div class="top-filters_suggestions-container" data-filter-visibility="hidden" data-filter-category="appliance">
-<ul class="top-filters_suggestions-list" data-filter-list-category="appliance"></ul>
-</div></div>
-
-<div class="top-filters_container">
-<label>
-<input class="top-filters_ustensiles" name="ustensils" placeholder="Ustensiles" aria-label="Rechercher par ustensiles"></input>
-${chevronDownIcon}
-</label>
-<div class="top-filters_suggestions-container" data-filter-visibility="hidden" data-filter-category="ustensils">
-<ul class="top-filters_suggestions-list" data-filter-list-category="ustensils"></ul>
-</div></div>
-</div>`
+export const createRecipeFilters = (main) => {
+  let container = document.createElement("div")
+  container.className = "top-filters-list_container"
+  for (let filter of Object.keys(dataset)) {
+    let displayFormat
+    if (filter === "ingredient") {
+      displayFormat = "ingrédients"
+    } else if (filter == "appliance") {
+      displayFormat = "appareils"
+    } else if (filter == "ustensils") {
+      displayFormat = "ustensiles"
+    }
+    container.innerHTML += `<div class="top-filters_container">
+    <label for="${filter}">
+    <input type="search" class="top-filters_${filter}" id="${filter}" name="${filter}" placeholder="${displayFormat}" aria-label="Rechercher par ${displayFormat}"></input>
+    </label>
+    <svg class="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->${chevronDownIcon}
+    </svg>
+    <div class="top-filters_suggestions-container" data-filter-visible="false" data-filter-category="${filter}">
+    <ul class="top-filters_suggestions-list" data-filter-list-category="${filter}"></ul>
+    </div></div>`
+  }
+  main.appendChild(container)
 }
 
 // Change the top-filters chevron icon direction on focus in/out
@@ -43,11 +39,11 @@ export const trackTopFilterChevronDirection = () => {
       () => (inputField.nextElementSibling.outerHTML = chevronDownIcon)
     )
   }
+  createFilterButtonsEvents()
 }
 
 export const createTopFiltersSuggestions = () => {
   const topFilters = document.querySelectorAll(".top-filters_container")
-  //let test = document.querySelector(".top-filters_ingredients").addEventListener("click", () => {console.log("test")})
   for (let topFilter of topFilters) {
     // For each top filter category, retrieves the category name and populates the top filter with the corresponding entries from the Store
     for (let [key, value] of Object.entries(dataset)) {
@@ -60,15 +56,55 @@ export const createTopFiltersSuggestions = () => {
         topFilterList.appendChild(suggestionListItem)
       })
     }
-    let filterSuggestionsContainer
-    topFilter.addEventListener("focusin", (event) => {
-      filterSuggestionsContainer = document.querySelector(
-        `[data-filter-category=${event.target.name}].top-filters_suggestions-container`
-      )
-      filterSuggestionsContainer.setAttribute("data-filter-visibility", "visible")
+  }
+}
+
+export const createFilterButtonsEvents = () => {
+  const categoryChevron = document.querySelectorAll(".top-filters_container svg")
+  for (let chevron of categoryChevron) {
+    chevron.addEventListener("click", (event) => {
+      new filterButtonState(event, chevron).manageState()
     })
-    topFilter.addEventListener("focusout", (event) => {
-      filterSuggestionsContainer.setAttribute("data-filter-visibility", "hidden")
+    chevron.addEventListener("keypress", (event) => {
+      if (event.key == " ") {
+        event.preventDefault()
+      }
+      new filterButtonState(event, chevron).manageState()
     })
+    chevron.addEventListener("focusout", (event) => {
+      new filterButtonState(event, chevron).hideFilterList()
+    })
+  }
+}
+
+class filterButtonState {
+  constructor(event, chevron) {
+    this.eventTargetClass = event.target.classList
+    this.chevron = chevron
+    this.filterSuggestionsContainer = event.target.nextElementSibling
+    this.filterCategory = this.filterSuggestionsContainer.getAttribute("data-filter-category")
+    this.currentDisplayState = filterDisplayStatus[this.filterCategory]
+  }
+
+  manageState() {
+    if (this.currentDisplayState == false) {
+      this.displayFilterList()
+    } else {
+      this.hideFilterList()
+    }
+  }
+
+  displayFilterList() {
+    this.eventTargetClass = "chevron-up"
+    this.chevron.innerHTML = chevronUpIcon
+    this.filterSuggestionsContainer.setAttribute("data-filter-visible", true)
+    filterDisplayStatus[this.filterCategory] = true
+  }
+
+  hideFilterList() {
+    this.eventTargetClass = "chevron-down"
+    this.chevron.innerHTML = chevronDownIcon
+    this.filterSuggestionsContainer.setAttribute("data-filter-visible", false)
+    filterDisplayStatus[this.filterCategory] = false
   }
 }

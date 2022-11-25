@@ -17,14 +17,6 @@
       @media (min-width: 426px) and (max-width: 590px) {
         margin-right: 0;
       }
-      & svg {
-        position: absolute;
-        fill: white;
-        height: 1.8em;
-        right: 1em;
-        top: 1.4em;
-        pointer-events: none;
-      }
     }
     & input {
       height: 4em;
@@ -54,29 +46,58 @@
   &_ingredient {
     background-color: #3282f7;
   }
-  &_appareils {
+  &_appliance {
     background-color: #68d9a4;
   }
-  &_ustensiles {
+  &_ustensils {
     background-color: #ed6454;
   }
   &_container {
     position: relative;
+    & svg {
+      position: absolute;
+      fill: white;
+      height: 1.8em;
+      right: 3em;
+      top: 1.4em;
+      cursor: pointer;
+      & > path {
+        // Prevents <path> element from interfering with event listeners of top filters
+        pointer-events: none;
+      }
+    }
+    & label input::placeholder{
+      text-transform: capitalize;
+    }
   }
   &_suggestions {
     &-container {
-      width: 100%;
+      position: relative;
       margin-right: 2em;
-      height: 5em;
-      background-color: #68d9a4;
-      &[data-filter-visibility="hidden"] {
+
+      &[data-filter-visible="false"] {
         display: none;
       }
-      &[data-filter-visibility="visible"] {
+      &[data-filter-visible="true"] {
         display: block;
       }
     }
-    &-list li {
+    &-list {
+      margin: 0;
+      //position: absolute;
+      width: 30em;
+      height: 15em;
+      &[data-filter-list-category="ingredient"] {
+        background-color: #3282f7;
+      }
+      &[data-filter-list-category="appliance"] {
+        background-color: #68d9a4;
+      }
+      &[data-filter-list-category="ustensils"] {
+        background-color: #ed6454;
+      }
+    }
+    & li {
       text-transform: capitalize;
     }
   }
