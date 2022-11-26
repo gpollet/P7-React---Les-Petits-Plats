@@ -1,13 +1,12 @@
 import { createHeader } from "../components/header.js"
 import { createSearchBar } from "../components/search-bar.js"
 import {
-  createFilterButtonsEvents,
   createRecipeFilters,
-  createTopFiltersSuggestions,
-  trackTopFilterChevronDirection,
+  createTopFilters,
 } from "../components/top-filters.js"
 import { Recipe } from "../models/Recipe.js"
 import { dataset } from "../store/store.js"
+import { Utils } from "../utils/Utils.js"
 
 export function displayHome(data) {
   const app = document.getElementById("app")
@@ -23,9 +22,9 @@ export function displayHome(data) {
     new Recipe(recipe).displayRecipeCard(recipeListContainer)
     createStoreDataset(recipe)
   })
-  createTopFiltersSuggestions()
+  Utils.sortData(dataset)
+  createTopFilters()
   lastRowRecipeList(recipeCards, recipeListContainer)
-  createFilterButtonsEvents()
 }
 
 // Creates an empty and hidden recipe card on the last row of the recipe list when it would display 2 cards, to prevent "justify-content: space between" to add a gap in-between the two recipes.
@@ -65,9 +64,3 @@ function createStoreDataset(data) {
     })
   }
 }
-
-// Sorts the top filters items to display them in alphabetical order
-//for (let [key, value] of Object.entries(dataset)) {
-//  value.sort()
-//}
-//}

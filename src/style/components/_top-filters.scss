@@ -66,7 +66,7 @@
         pointer-events: none;
       }
     }
-    & label input::placeholder{
+    & label input::placeholder {
       text-transform: capitalize;
     }
   }
@@ -84,9 +84,11 @@
     }
     &-list {
       margin: 0;
-      //position: absolute;
-      width: 30em;
-      height: 15em;
+      height: 20em;
+      column-count: 3;
+      column-fill: balance;
+      overflow: hidden;
+      width: 40em;
       &[data-filter-list-category="ingredient"] {
         background-color: #3282f7;
       }
@@ -96,9 +98,12 @@
       &[data-filter-list-category="ustensils"] {
         background-color: #ed6454;
       }
-    }
-    & li {
-      text-transform: capitalize;
+      & li {
+        text-transform: capitalize;
+        line-height: 2em;
+        list-style: none;
+        color: white;
+      }
     }
   }
 }
