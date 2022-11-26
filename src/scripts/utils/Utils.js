@@ -14,4 +14,15 @@ export class Utils {
       value.sort()
     }
   }
+
+  // Adds diacritic and special characters back to ASCII top filters names
+  static getTopFiltersDisplayNames(filter) {
+    if (filter === "ingredient") {
+      return "Ingrédients"
+    } else if (filter == "appliance") {
+      return "Appareils"
+    } else if (filter == "ustensils") {
+      return "Ustensiles"
+    }
+  }
 }

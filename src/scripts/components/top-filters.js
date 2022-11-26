@@ -1,20 +1,16 @@
 import { chevronIcon, dataset, filterDisplayStatus } from "../store/store.js"
+import { Utils } from "../utils/Utils.js"
 
 export const createRecipeFilters = (main) => {
   let container = document.createElement("div")
   container.className = "top-filters-list_container"
   for (let filter of Object.keys(dataset)) {
-    let displayFormat
-    if (filter === "ingredient") {
-      displayFormat = "ingrédients"
-    } else if (filter == "appliance") {
-      displayFormat = "appareils"
-    } else if (filter == "ustensils") {
-      displayFormat = "ustensiles"
-    }
+    let displayFormat = Utils.getTopFiltersDisplayNames(filter)
     container.innerHTML += `<div class="top-filters_container">
     <label for="${filter}">
-    <input type="search" class="top-filters_${filter}" id="${filter}" name="${filter}" placeholder="${displayFormat}" aria-label="Rechercher par ${displayFormat}"></input>
+    <input type="search" class="top-filters_${filter}" id="${filter}" name="${filter}" placeholder="${displayFormat}" aria-label="Rechercher par ${displayFormat}" data-active-filter="${
+      filterDisplayStatus[filter]
+    }"></input>
     </label>
  ${new chevronIcon().createChevronIcon("chevron-down")}
     <div class="top-filters_suggestions-container" data-filter-visible="${
@@ -58,6 +54,10 @@ const createFilterButtonsEvents = () => {
       new filterButtonState(event, chevron).manageState()
     })
   }
+  const filterInputsFields = document.querySelectorAll("label > input")
+  for (let inputField of filterInputsFields) {
+    inputField.addEventListener("click", () => filterButtonState.filtersStateListener())
+  }
 }
 
 class filterButtonState {
@@ -69,26 +69,27 @@ class filterButtonState {
     this.currentDisplayState = filterDisplayStatus[this.filterCategory]
   }
 
-  // When opening a new filter menu, makes sure any other filter menu opened is being closed before opening the new one
-  filtersStateListener = () => {
+  // When opening a new filter menu or input, makes sure any other filter menu opened is being closed before opening the new one
+  static filtersStateListener = () => {
     const filtersButtons = document.querySelectorAll("[data-filter-visible]")
     for (let button of filtersButtons) {
-      if (button !== this.filterSuggestionsContainer) {
-        button.previousElementSibling.innerHTML = new chevronIcon().createChevronIcon(
-          "chevron-down"
-        )
-        const buttonCategory = button.getAttribute("data-filter-category")
-        button.setAttribute("data-filter-visible", false)
-        filterDisplayStatus[buttonCategory] = false
-      }
+      const buttonCategory = button.getAttribute("data-filter-category")
+      button.previousElementSibling.innerHTML = new chevronIcon().createChevronIcon("chevron-down")
+      button.setAttribute("data-filter-visible", false)
+      filterDisplayStatus[buttonCategory] = false
+      // When closing filter menu, sets category name back as placeholder
+      const newPlaceholder = Utils.getTopFiltersDisplayNames(buttonCategory)
+      const filterInput = document.querySelector(`.top-filters_${buttonCategory}`)
+      filterInput.setAttribute("data-active-filter", "false")
+      filterInput.setAttribute("placeholder", `${newPlaceholder}`)
     }
   }
 
   // Gets the current display state of the targetted filter. If it is already being displayed, hides it. If not, displays it.
   manageState() {
+    filterButtonState.filtersStateListener()
     if (this.currentDisplayState == false) {
       // Closes all filter menus
-      this.filtersStateListener()
       // Opens selected menu
       this.displayFilterList()
     } else {
@@ -102,6 +103,13 @@ class filterButtonState {
     this.chevron.innerHTML = new chevronIcon().createChevronIcon("chevron-up")
     this.filterSuggestionsContainer.setAttribute("data-filter-visible", true)
     filterDisplayStatus[this.filterCategory] = true
+    const newPlaceholder = Utils.getTopFiltersDisplayNames(this.filterCategory).toLowerCase()
+    const filterInput = document.querySelector(`.top-filters_${this.filterCategory}`)
+    filterInput.setAttribute(
+      "placeholder",
+      `Rechercher un ${newPlaceholder.slice(0, newPlaceholder.length - 1)}`
+    )
+    filterInput.setAttribute("data-active-filter", true)
   }
 
   hideFilterList() {
