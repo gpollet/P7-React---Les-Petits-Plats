@@ -77,7 +77,7 @@ class filterButtonState {
     const filtersButtons = document.querySelectorAll("[data-filter-visible]")
     for (let button of filtersButtons) {
       const buttonCategory = button.getAttribute("data-filter-category")
-      button.previousElementSibling.innerHTML = new chevronIcon().createChevronIcon("chevron-down")
+      button.previousElementSibling.innerHTML = new chevronIcon().updateChevronIcon("chevron-down")
       button.setAttribute("data-filter-visible", false)
       filterDisplayStatus[buttonCategory] = false
       // When closing filter menu, sets category name back as placeholder
@@ -103,7 +103,7 @@ class filterButtonState {
   displayFilterList() {
     Object.entries(filterDisplayStatus).forEach((filterCategory) => (filterCategory.value = false))
     this.event.target.classList = "chevron-up"
-    this.chevron.innerHTML = new chevronIcon().createChevronIcon("chevron-up")
+    this.chevron.innerHTML = new chevronIcon().updateChevronIcon("chevron-up")
     this.filterSuggestionsContainer.setAttribute("data-filter-visible", true)
     filterDisplayStatus[this.filterCategory] = true
     const newPlaceholder = Utils.getTopFiltersDisplayNames(this.filterCategory).toLowerCase()
@@ -117,7 +117,7 @@ class filterButtonState {
 
   hideFilterList() {
     this.event.target.classList = "chevron-down"
-    this.chevron.innerHTML = new chevronIcon().createChevronIcon("chevron-down")
+    this.chevron.innerHTML = new chevronIcon().updateChevronIcon("chevron-down")
     this.filterSuggestionsContainer.setAttribute("data-filter-visible", false)
     filterDisplayStatus[this.filterCategory] = false
   }
