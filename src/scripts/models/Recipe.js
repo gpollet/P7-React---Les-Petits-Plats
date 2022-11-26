@@ -1,9 +1,5 @@
-import {
-  createIngredientsList,
-  createRecipeCard,
-} from "../components/recipe-card.js"
-import { dataset } from "../store/store.js"
-import { Filter } from "./Filter.js"
+import { createIngredientsList, createRecipeCard } from "../components/recipe-card.js"
+import { Utils } from "../utils/Utils.js"
 
 export class Recipe {
   constructor(recipe) {
@@ -24,20 +20,8 @@ export class Recipe {
     cardContainer.ariaLabel = this.name
     cardContainer.setAttribute("data-card-id", this.id)
     cardContainer.setAttribute("tabindex", "0")
-    createRecipeCard(cardContainer, this, this.getMediaFilename())
+    createRecipeCard(cardContainer, this, Utils.formatStringCharacters(this.name))
     container.appendChild(cardContainer)
-    this.ingredients.map((ingredient) =>
-      createIngredientsList(this.id, ingredient)
-    )
-    //new Filter(this.ingredients.map(ingredient => ingredient.ingredient)).fillStoreData()
-  }
-
-  getMediaFilename() {
-    return this.name
-      .toLowerCase()
-      .replace(/[ ]/g, "-")
-      .replace(/[,]/g, "")
-      .replace(/[éèêë]/g, "e")
-      .replace(/[àâä]/g, "a")
+    this.ingredients.map((ingredient) => createIngredientsList(this.id, ingredient))
   }
 }

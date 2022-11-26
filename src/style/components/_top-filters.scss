@@ -1,4 +1,8 @@
 .top-filters {
+  &-active_state::placeholder {
+    color: red;
+  }
+
   &-list_container {
     display: flex;
     flex-wrap: wrap;
@@ -17,14 +21,6 @@
       @media (min-width: 426px) and (max-width: 590px) {
         margin-right: 0;
       }
-      & svg {
-        position: absolute;
-        fill: white;
-        height: 1.8em;
-        right: 1em;
-        top: 1.4em;
-        pointer-events: none;
-      }
     }
     & input {
       height: 4em;
@@ -35,7 +31,7 @@
         min-width: 3em;
         max-width: 5.1em;
       }
-      @media (min-width:769px) and (max-width:1024px) {
+      @media (min-width: 769px) and (max-width: 1024px) {
         //min-width: 6em;
         max-width: 6em;
       }
@@ -46,33 +42,79 @@
       font-size: 1em;
       text-align: left;
       padding-left: 1em;
-      &::placeholder {
+      &[data-active-filter="false"]::placeholder {
         color: white;
+      }
+      &[data-active-filter="true"] {
+        border-radius: 5px 5px 0 0;
+        &::placeholder {
+          color: rgb(233, 233, 233);
+        }
       }
     }
   }
-  &_ingredients {
+
+  &_ingredient {
     background-color: #3282f7;
   }
-  &_appareils {
+  &_appliance {
     background-color: #68d9a4;
   }
-  &_ustensiles {
+  &_ustensils {
     background-color: #ed6454;
   }
+
   &_container {
     position: relative;
-  }
-  &_suggestions-container {
-    width: 100%;
-    margin-right: 2em;
-    height: 5em;
-    background-color: #68d9a4;
-    &[data-filter-visibility="hidden"] {
-      display: none;
+    & svg {
+      position: absolute;
+      fill: white;
+      height: 1.8em;
+      right: 3em;
+      top: 1.4em;
+      cursor: pointer;
+      & > path {
+        // Prevents <path> element from interfering with event listeners of top filters
+        pointer-events: none;
+      }
     }
-    &[data-filter-visibility="visible"] {
-      display: block;
+  }
+
+  &_suggestions {
+    &-container {
+      position: relative;
+      margin-right: 2em;
+
+      &[data-filter-visible="false"] {
+        display: none;
+      }
+      &[data-filter-visible="true"] {
+        display: block;
+      }
+    }
+
+    &-list {
+      margin: 0;
+      height: 20em;
+      column-count: 3;
+      column-fill: balance;
+      width: 40em;
+      border-radius: 0 0 5px 5px;
+      &[data-filter-list-category="ingredient"] {
+        background-color: #3282f7;
+      }
+      &[data-filter-list-category="appliance"] {
+        background-color: #68d9a4;
+      }
+      &[data-filter-list-category="ustensils"] {
+        background-color: #ed6454;
+      }
+      & li {
+        text-transform: capitalize;
+        line-height: 2em;
+        list-style: none;
+        color: white;
+      }
     }
   }
 }
