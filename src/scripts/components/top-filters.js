@@ -58,6 +58,9 @@ const createFilterButtonsEvents = () => {
   for (let inputField of filterInputsFields) {
     inputField.addEventListener("click", () => filterButtonState.filtersStateListener())
   }
+  for (let inputField of filterInputsFields) {
+    inputField.addEventListener("input", () => filterButtonState.filtersStateListener())
+  }
 }
 
 class filterButtonState {
