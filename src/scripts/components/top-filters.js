@@ -26,25 +26,24 @@ export const createRecipeFilters = (main) => {
 // For each top filter category, retrieves the category name and populates the top filter with the corresponding entries from the Store
 export const createTopFilters = () => {
   const topFilters = document.querySelectorAll(".top-filters_container")
-    for (let [key, value] of Object.entries(dataset)) {
-      console.log("test")
-      const topFilterList = document.querySelector(
-        `[data-filter-list-category=${key}].top-filters_suggestions-list`
-      )
-      value.map((el) => {
-        el = Utils.stringFirstLetterToUpperCase(el)
-        const suggestionListItem = document.createElement("li")
-        suggestionListItem.textContent += `${el}`
-        suggestionListItem.addEventListener("click", () => {
-          // Checks if filter was not already set active by user, if not set it as active then remove it from the list
-          if (!userSelectedFilters[key].includes(el)) {
-            new activeFilters(key, el, suggestionListItem).addActiveFilter()
-            suggestionListItem.setAttribute("data-filter-visible", false)
-          }
-        })
-        topFilterList.appendChild(suggestionListItem)
+  for (let [key, value] of Object.entries(dataset)) {
+    const topFilterList = document.querySelector(
+      `[data-filter-list-category=${key}].top-filters_suggestions-list`
+    )
+    value.map((el) => {
+      el = Utils.stringFirstLetterToUpperCase(el)
+      const suggestionListItem = document.createElement("li")
+      suggestionListItem.textContent += `${el}`
+      suggestionListItem.addEventListener("click", () => {
+        // Checks if filter was not already set active by user, if not set it as active then remove it from the list
+        if (!userSelectedFilters[key].includes(el)) {
+          new activeFilters(key, el, suggestionListItem).addActiveFilter()
+          suggestionListItem.setAttribute("data-filter-visible", false)
+        }
       })
-    }
+      topFilterList.appendChild(suggestionListItem)
+    })
+  }
   createFilterButtonsEvents()
 }
 
@@ -82,7 +81,9 @@ class filterButtonState {
 
   // When opening a new filter menu or input, makes sure any other filter menu opened is being closed before opening the new one
   static filtersStateListener = () => {
-    const filtersButtons = document.querySelectorAll("[data-filter-visible].top-filters_suggestions-container")
+    const filtersButtons = document.querySelectorAll(
+      "[data-filter-visible].top-filters_suggestions-container"
+    )
     for (let button of filtersButtons) {
       const buttonCategory = button.getAttribute("data-filter-category")
       button.previousElementSibling.innerHTML = new chevronIcon().updateChevronIcon("chevron-down")
