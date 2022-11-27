@@ -1,5 +1,6 @@
-import { chevronIcon, dataset, filterDisplayStatus } from "../store/store.js"
-import { Utils } from "../utils/Utils.js"
+import { dataset, filterDisplayStatus, userSelectedFilters } from "../store/store.js"
+import { chevronIcon, Utils } from "../utils/Utils.js"
+import { activeFilters } from "./active-filters.js"
 
 export const createRecipeFilters = (main) => {
   let container = document.createElement("div")
@@ -8,12 +9,12 @@ export const createRecipeFilters = (main) => {
     let displayFormat = Utils.getTopFiltersDisplayNames(filter)
     container.innerHTML += `<div class="top-filters_container">
     <label for="${filter}">
-    <input type="search" class="top-filters_${filter}" id="${filter}" name="${filter}" placeholder="${displayFormat}" aria-label="Rechercher par ${displayFormat}" data-active-filter="${
+    <input type="search" class="top-filters_${filter} ${filter}" id="${filter}" name="${filter}" placeholder="${displayFormat}" aria-label="Rechercher par ${displayFormat}" data-active-filter="${
       filterDisplayStatus[filter]
     }"></input>
     </label>
  ${new chevronIcon().createChevronIcon("chevron-down")}
-    <div class="top-filters_suggestions-container" data-filter-visible="${
+    <div class="top-filters_suggestions-container ${filter}" data-filter-visible="${
       filterDisplayStatus[filter]
     }" data-filter-category="${filter}">
     <ul class="top-filters_suggestions-list" data-filter-list-category="${filter}"></ul>
@@ -31,8 +32,16 @@ export const createTopFilters = () => {
         `[data-filter-list-category=${key}].top-filters_suggestions-list`
       )
       value.map((el) => {
+        el = Utils.stringFirstLetterToUpperCase(el)
         const suggestionListItem = document.createElement("li")
-        suggestionListItem.textContent += el
+        suggestionListItem.textContent += `${el}`
+        suggestionListItem.addEventListener("click", () => {
+          // Checks if filter was not already set active by user, if not set it as active then remove it from the list
+          if (!userSelectedFilters[key].includes(el)) {
+            new activeFilters(key, el).addActiveFilter()
+            suggestionListItem.remove()
+          }
+        })
         topFilterList.appendChild(suggestionListItem)
       })
     }
@@ -122,3 +131,5 @@ class filterButtonState {
     filterDisplayStatus[this.filterCategory] = false
   }
 }
+
+// Affichage filtres sélectionnés : si valeur saisie par utilisateur !== undefined dans le dataset, l'ajouter au store filtres user quand appuie sur Entrée ou clique sur suggestion en dessous.
