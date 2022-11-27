@@ -27,7 +27,6 @@ export class activeFilters {
     newActiveFilterButton.className = `active-filters_item ${this.category}`
     newActiveFilterButton.textContent = `${this.item}`
     newActiveFilterButton.innerHTML += `${closeIcon}`
-    //console.log(document.querySelectorAll(`.active-filters_item.${this.category}`))
     if (!document.querySelector(`.active-filters_item.${this.category}`)) {
       activeFilterCategoryContainer = document.querySelector(`.active-filters_container`)
       activeFilterCategoryContainer.appendChild(newActiveFilterButton)
@@ -36,7 +35,6 @@ export class activeFilters {
         `.active-filters_item.${this.category}`
         )
         activeFilterCategoryContainer.insertAdjacentElement("afterend", newActiveFilterButton)
-        //console.log(activeFilterCategoryContainer)
     }
     userSelectedFilters[this.category].push(this.item)
     this.removeActiveFilterEvent(newActiveFilterButton)
