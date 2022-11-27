@@ -54,7 +54,6 @@
       @media (max-width: 550px) {
         width: 100%;
       }
-
     }
     &-list {
       margin: 0;
@@ -92,7 +91,11 @@
 
 .active-filters {
   &_container {
-    @include top-filter-container;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-right: 1em;
+    
   }
   &_item {
     position: relative;
