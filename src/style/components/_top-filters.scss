@@ -113,3 +113,10 @@
     }
   }
 }
+
+[data-filter-visible="false"] {
+  display: none;
+}
+[data-filter-visible="true"] {
+  display: block;
+}

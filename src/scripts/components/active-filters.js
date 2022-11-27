@@ -2,9 +2,10 @@ import { userSelectedFilters } from "../store/store.js"
 import { closeIcon, Utils } from "../utils/Utils.js"
 
 export class activeFilters {
-  constructor(category, item) {
+  constructor(category, item, suggestedElement) {
     this.category = category
     this.item = item
+    this.suggestedElement = suggestedElement
     this.container = document.querySelector(".active-filters_container")
   }
 
@@ -33,6 +34,7 @@ export class activeFilters {
           (el) => el !== this.item
         )
         activeFilterButton.remove()
+        this.suggestedElement.setAttribute("data-filter-visible", true)
       }
     })
   }

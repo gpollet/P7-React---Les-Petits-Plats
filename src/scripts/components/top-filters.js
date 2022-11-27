@@ -38,8 +38,8 @@ export const createTopFilters = () => {
         suggestionListItem.addEventListener("click", () => {
           // Checks if filter was not already set active by user, if not set it as active then remove it from the list
           if (!userSelectedFilters[key].includes(el)) {
-            new activeFilters(key, el).addActiveFilter()
-            suggestionListItem.remove()
+            new activeFilters(key, el, suggestionListItem).addActiveFilter()
+            suggestionListItem.setAttribute("data-filter-visible", false)
           }
         })
         topFilterList.appendChild(suggestionListItem)
