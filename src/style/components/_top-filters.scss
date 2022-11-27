@@ -54,12 +54,7 @@
       @media (max-width: 550px) {
         width: 100%;
       }
-      &[data-filter-visible="false"] {
-        display: none;
-      }
-      &[data-filter-visible="true"] {
-        display: block;
-      }
+
     }
     &-list {
       margin: 0;
