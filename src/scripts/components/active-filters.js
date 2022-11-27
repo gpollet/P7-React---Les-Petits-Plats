@@ -13,15 +13,29 @@ export class activeFilters {
     const activeFiltersContainer = document.createElement("div")
     activeFiltersContainer.className = "active-filters_container"
     parent.appendChild(activeFiltersContainer)
+    //for (let [key] of Object.entries(userSelectedFilters)) {
+    //  const categoryContainer = document.createElement("div")
+    //  categoryContainer.className = `active-filters_${key}-container`
+    //  activeFiltersContainer.appendChild(categoryContainer)
+    //}
   }
 
   // Adds selected item to active filter if it is not already active
   addActiveFilter() {
+    let activeFilterCategoryContainer
     const newActiveFilterButton = document.createElement("div")
     newActiveFilterButton.className = `active-filters_item ${this.category}`
     newActiveFilterButton.textContent = `${this.item}`
     newActiveFilterButton.innerHTML += `${closeIcon}`
-    this.container.appendChild(newActiveFilterButton)
+    if (!document.querySelector(`.active-filters_item.${this.category}`)) {
+      activeFilterCategoryContainer = document.querySelector(`.active-filters_container`)
+      activeFilterCategoryContainer.appendChild(newActiveFilterButton)
+    } else {
+      activeFilterCategoryContainer = document.querySelector(
+        `.active-filters_item.${this.category}`
+        )
+        activeFilterCategoryContainer.insertAdjacentElement("afterend", newActiveFilterButton)
+    }
     userSelectedFilters[this.category].push(this.item)
     this.removeActiveFilterEvent(newActiveFilterButton)
   }

@@ -26,8 +26,8 @@ export const createRecipeFilters = (main) => {
 // For each top filter category, retrieves the category name and populates the top filter with the corresponding entries from the Store
 export const createTopFilters = () => {
   const topFilters = document.querySelectorAll(".top-filters_container")
-  for (let topFilter of topFilters) {
     for (let [key, value] of Object.entries(dataset)) {
+      console.log("test")
       const topFilterList = document.querySelector(
         `[data-filter-list-category=${key}].top-filters_suggestions-list`
       )
@@ -45,7 +45,6 @@ export const createTopFilters = () => {
         topFilterList.appendChild(suggestionListItem)
       })
     }
-  }
   createFilterButtonsEvents()
 }
 
@@ -83,7 +82,7 @@ class filterButtonState {
 
   // When opening a new filter menu or input, makes sure any other filter menu opened is being closed before opening the new one
   static filtersStateListener = () => {
-    const filtersButtons = document.querySelectorAll("[data-filter-visible]")
+    const filtersButtons = document.querySelectorAll("[data-filter-visible].top-filters_suggestions-container")
     for (let button of filtersButtons) {
       const buttonCategory = button.getAttribute("data-filter-category")
       button.previousElementSibling.innerHTML = new chevronIcon().updateChevronIcon("chevron-down")

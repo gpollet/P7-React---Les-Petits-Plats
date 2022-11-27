@@ -54,16 +54,10 @@
       @media (max-width: 550px) {
         width: 100%;
       }
-      &[data-filter-visible="false"] {
-        display: none;
-      }
-      &[data-filter-visible="true"] {
-        display: block;
-      }
     }
     &-list {
       margin: 0;
-      height: 20em;
+      max-height: 20em;
       column-count: 3;
       column-fill: balance;
       width: 40em;
@@ -97,7 +91,11 @@
 
 .active-filters {
   &_container {
-    @include top-filter-container;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-right: 1em;
+    
   }
   &_item {
     position: relative;
