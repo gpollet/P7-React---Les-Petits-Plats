@@ -57,7 +57,7 @@
     }
     &-list {
       margin: 0;
-      height: 20em;
+      max-height: 20em;
       column-count: 3;
       column-fill: balance;
       width: 40em;
