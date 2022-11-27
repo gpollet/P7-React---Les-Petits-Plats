@@ -1,0 +1,35 @@
+@import "./variables";
+
+@mixin top-filter_button {
+  height: 4em;
+  padding-right: 3em;
+  min-width: 6em;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: 700;
+  font-size: 1em;
+  text-align: left;
+  padding-left: $top-filter-padding_left;
+}
+
+@mixin top-filter-svg {
+  position: absolute;
+  fill: white;
+  height: 1.8em;
+  top: 1.2em;
+  cursor: pointer;
+  & > path {
+    // Prevents <path> element from interfering with event listeners of top filters
+    pointer-events: none;
+  }
+}
+
+@mixin top-filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 1em 0;
+  @media (min-width: 550px) and (max-width: 590px) {
+    justify-content: space-between;
+  }
+}

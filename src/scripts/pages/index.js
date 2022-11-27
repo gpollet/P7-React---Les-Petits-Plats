@@ -1,3 +1,4 @@
+import { activeFilters } from "../components/active-filters.js"
 import { createHeader } from "../components/header.js"
 import { createSearchBar } from "../components/search-bar.js"
 import {
@@ -14,6 +15,7 @@ export function displayHome(data) {
   createHeader(app)
   app.appendChild(main)
   createSearchBar(main)
+  activeFilters.createActiveFiltersContainer(main)
   createRecipeFilters(main)
   const recipeListContainer = document.createElement("div")
   recipeListContainer.classList = "recipes-list_container"
