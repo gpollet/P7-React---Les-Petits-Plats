@@ -95,13 +95,16 @@
     flex-direction: row;
     flex-wrap: wrap;
     margin-right: 1em;
-    
   }
   &_item {
     position: relative;
     display: flex;
     align-items: center;
     @include top-filter_button;
+    @media (max-width: 550px) {
+      max-width: none;
+    }
+    
     margin-right: 1em;
     margin-bottom: 1em;
     cursor: default;
