@@ -18,11 +18,35 @@
     & input {
       @include top-filter-button;
       width: 100%;
+      &[data-active-filter="false"]::-webkit-input-placeholder {
+        color: white;
+      }
+      &[data-active-filter="false"]::-moz-placeholder {
+        color: white;
+      }
+      &[data-active-filter="false"]:-ms-input-placeholder {
+        color: white;
+      }
+      &[data-active-filter="false"]::-ms-input-placeholder {
+        color: white;
+      }
       &[data-active-filter="false"]::placeholder {
         color: white;
       }
       &[data-active-filter="true"] {
         border-radius: 5px 5px 0 0;
+        &::-webkit-input-placeholder {
+          color: rgb(233, 233, 233);
+        }
+        &::-moz-placeholder {
+          color: rgb(233, 233, 233);
+        }
+        &:-ms-input-placeholder {
+          color: rgb(233, 233, 233);
+        }
+        &::-ms-input-placeholder {
+          color: rgb(233, 233, 233);
+        }
         &::placeholder {
           color: rgb(233, 233, 233);
         }
@@ -58,15 +82,20 @@
     &-list {
       margin: 0;
       max-height: 20em;
-      column-count: 3;
-      column-fill: balance;
+      -moz-column-count: 3;
+           column-count: 3;
+      -moz-column-fill: balance;
+           column-fill: balance;
       width: 40em;
       @media (max-width: 550px) {
         padding-left: $top-filter-padding_left;
-        column-count: 2;
+        -moz-column-count: 2;
+             column-count: 2;
         width: 95%;
       }
       & li {
+        width: -webkit-fit-content;
+        width: -moz-fit-content;
         width: fit-content;
         line-height: 2em;
         list-style: none;

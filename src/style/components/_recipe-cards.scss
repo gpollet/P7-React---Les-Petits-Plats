@@ -23,7 +23,8 @@
     min-height: 20em;
     height: 45%;
     background-color: #c7bebe;
-    object-fit: cover;
+    -o-object-fit: cover;
+       object-fit: cover;
   }
   &_title {
     display: flex;
