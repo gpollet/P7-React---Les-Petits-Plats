@@ -62,9 +62,9 @@ const createFilterButtonsEvents = () => {
     })
   }
   const filterInputsFields = document.querySelectorAll("label > input")
-  for (let inputField of filterInputsFields) {
-    inputField.addEventListener("click", () => filterButtonState.filtersStateListener())
-  }
+  //for (let inputField of filterInputsFields) {
+  //  inputField.addEventListener("click", () => filterButtonState.filtersStateListener())
+  //}
   for (let inputField of filterInputsFields) {
     inputField.addEventListener("input", () => filterButtonState.filtersStateListener())
   }
