@@ -63,3 +63,10 @@
     visibility: hidden;
   }
 }
+
+[data-display-recipe="false"] {
+  display: none;
+}
+[data-display-recipe="true"] {
+  display: block;
+}
