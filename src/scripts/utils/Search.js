@@ -20,11 +20,7 @@ export class Search {
       recipe.id,
       Utils.formatStringCharacters(recipe.name),
     ])
-    //const recipeListKeywords = recipes.map((recipe) => [
-    //  recipe.id,
-    //  Utils.formatStringCharacters(recipe.name),
-    //])
-    console.log(recipeListKeywords)
+
     let matchingRecipes = []
     for (let recipeTitle of recipeListKeywords) {
       recipeTitle[1].split(" ").map((substring) => {

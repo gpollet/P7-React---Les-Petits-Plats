@@ -26,7 +26,6 @@ export function displayHome(data) {
   })
   Utils.sortData(dataset)
   createTopFilters()
-  lastRowRecipeList(recipeCards, recipeListContainer)
 }
 
 // Creates a list of all possible ingredients, appliances and ustensils based on the recipes data
