@@ -26,16 +26,6 @@ export function displayHome(data) {
   })
   Utils.sortData(dataset)
   createTopFilters()
-  lastRowRecipeList(recipeCards, recipeListContainer)
-}
-
-// Creates an empty and hidden recipe card on the last row of the recipe list when it would display 2 cards, to prevent "justify-content: space between" to add a gap in-between the two recipes.
-function lastRowRecipeList(recipeCards, container) {
-  if (recipeCards.length % 3 === 2) {
-    const hiddenRecipePlaceholder = document.createElement("div")
-    hiddenRecipePlaceholder.classList = "recipe-card_container recipe-card_placeholder"
-    container.appendChild(hiddenRecipePlaceholder)
-  }
 }
 
 // Creates a list of all possible ingredients, appliances and ustensils based on the recipes data

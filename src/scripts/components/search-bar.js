@@ -10,9 +10,10 @@ function searchBarEventListener() {
   const searchBar = document.querySelector(".top-search_bar")
   searchBar.addEventListener("input", () => {
     if (searchBar.value.length >= 3) {
-      Search.getKeywordsFromInput(Utils.formatStringCharacters(searchBar.value))
+      new Search(searchBar.value).getKeywordsFromInput()
     } 
     else {
+      // Makes sure recipes are visible again if user deletes his search input
       document.querySelectorAll(".recipe-card_container").forEach((card) => {
         card.setAttribute("data-display-recipe", true)
       })
