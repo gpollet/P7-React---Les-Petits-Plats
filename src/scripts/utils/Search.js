@@ -6,7 +6,7 @@ export class Search {
   constructor(value) {
     this.userInput = Utils.formatStringCharacters(value)
   }
-  
+
   getKeywordsFromInput() {
     // Creates a new string to search for, for each word separated by a " " in user's input
     const keywords = this.userInput.split(" ")
@@ -29,35 +29,46 @@ export class Search {
       document
         .querySelector(`[data-card-id="${recipe.id}"]`)
         .setAttribute("data-display-recipe", true)
-      this.searchMatchingIngredients(recipe.id)
+      this.searchMatchingTopFilters(recipe.id)
     })
   }
 
-  manageAllTopFilters() {
-    const ingredientTopFilterListElements = document.querySelector(
-      "[data-filter-list-category='ingredient']"
-    ).children
-    for (let element of ingredientTopFilterListElements) {
-      if (this.userInput.length < 3) {
-        element.setAttribute("data-filter-visible", true)  
-      } else {
-        element.setAttribute("data-filter-visible", false)
+  manageAllTopFilters(matchingElement) {
+    const topFiltersLists = document.querySelectorAll(".top-filters_suggestions-list")
+    for (let topFilter of topFiltersLists) {
+      topFilter = topFilter.children
+      for (let element of topFilter) {
+        if (this.userInput.length < 3 || matchingElement) {
+          matchingElement
+            ? matchingElement.setAttribute("data-filter-visible", true)
+            : element.setAttribute("data-filter-visible", true)
+        } else {
+          element.setAttribute("data-filter-visible", false)
+        }
       }
     }
   }
 
-  searchMatchingIngredients(matchingRecipeId) {
+  searchMatchingTopFilters(matchingRecipeId) {
     if (matchingRecipeId) {
-      let matchingRecipeData = recipes.find((recipe) => recipe.id == matchingRecipeId)
-      const matchingRecipeIngredients = matchingRecipeData.ingredients.map((ingredient) =>
+      const matchingRecipeData = recipes.find((recipe) => recipe.id == matchingRecipeId)
+      let matchingTopFilters = { ingredient: "", ustensils: "", appliance: "" }
+      matchingTopFilters.ingredient = matchingRecipeData.ingredients.map((ingredient) =>
         Utils.formatStringCharacters(ingredient.ingredient)
       )
-      const ingredientTopFilterListElements = document.querySelector(
-        "[data-filter-list-category='ingredient']"
-      ).children
-      for (let element of ingredientTopFilterListElements) {
-        if (matchingRecipeIngredients.includes(Utils.formatStringCharacters(element.textContent)))
-          element.setAttribute("data-filter-visible", true)
+      matchingTopFilters.ustensils = matchingRecipeData.ustensils.map((ustensil) =>
+        Utils.formatStringCharacters(ustensil)
+      )
+      matchingTopFilters.appliance = Utils.formatStringCharacters(matchingRecipeData.appliance)
+      let topFilterListElements
+      for (let [key] of Object.entries(matchingTopFilters)) {
+        topFilterListElements = document.querySelector(
+          `[data-filter-list-category='${key}']`
+        ).children
+        for (let element of topFilterListElements) {
+          if (matchingTopFilters[key].includes(Utils.formatStringCharacters(element.textContent)))
+            this.manageAllTopFilters(element)
+        }
       }
     }
   }
