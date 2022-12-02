@@ -13,6 +13,7 @@ function searchBarEventListener() {
       Search.getKeywordsFromInput(Utils.formatStringCharacters(searchBar.value))
     } 
     else {
+      // Makes sure recipes are visible again if user deletes his search input
       document.querySelectorAll(".recipe-card_container").forEach((card) => {
         card.setAttribute("data-display-recipe", true)
       })
