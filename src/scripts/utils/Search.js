@@ -1,4 +1,5 @@
 import { recipes } from "../api/recipes.js"
+import { recipesTitlesKeywords } from "../store/store.js"
 import { Utils } from "./Utils.js"
 
 export class Search {
@@ -14,28 +15,15 @@ export class Search {
   }
 
   searchMatchingTitles() {
-    // In each recipe names, filters out words shorter than 3 letters, then create a sublist of strings for each remaining words.
-    // TODO : Créer array pour créer recipeListKeywords à chargement page
-    const recipeListKeywords = recipes.map((recipe) => [
-      recipe.id,
-      Utils.formatStringCharacters(recipe.name),
-    ])
-
-    let matchingRecipes = []
-    for (let recipeTitle of recipeListKeywords) {
-      recipeTitle[1].split(" ").map((substring) => {
-        if (substring.length >= 3 && substring.includes(this.userInput)) {
-          // Checks if any keyword typed by the user matches a keyword from the recipes titles
-          matchingRecipes.push(recipeTitle)
-        }
-      })
-    }
+    const matchingRecipes = recipesTitlesKeywords.filter((recipe) =>
+      recipe.keywords.find((el) => el.includes(this.userInput))
+    )
     const recipeCards = document.querySelectorAll(".recipe-card_container")
     recipeCards.forEach((card) => {
       card.setAttribute("data-display-recipe", false)
     })
-    matchingRecipes.forEach(([key]) => {
-      document.querySelector(`[data-card-id="${key}"]`).setAttribute("data-display-recipe", true)
+    matchingRecipes.forEach((recipe) => {
+      document.querySelector(`[data-card-id="${recipe.id}"]`).setAttribute("data-display-recipe", true)
     })
   }
 }

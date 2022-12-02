@@ -55,6 +55,7 @@ function createStoreDataset(data) {
   }
 }
 
+    // In each recipe names, filters out words shorter than 3 letters, then create a sublist of strings for each remaining words.
 function getRecipesKeywords(recipe) {
   const keywords = recipe.name.split(" ")
   let recipeKeywords = {id: recipe.id, keywords: []}
