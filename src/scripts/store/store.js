@@ -5,3 +5,5 @@ export let dataset = { ingredient: [], ustensils: [], appliance: [] }
 export let filterDisplayStatus = { ingredient: false, ustensils: false, appliance: false }
 
 export let userSelectedFilters = { ingredient: [], ustensils: [], appliance: [] }
+
+export const recipesTitlesKeywords = []

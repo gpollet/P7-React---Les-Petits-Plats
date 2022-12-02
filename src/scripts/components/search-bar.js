@@ -11,12 +11,12 @@ function searchBarEventListener() {
   searchBar.addEventListener("input", () => {
     if (searchBar.value.length >= 3) {
       new Search(searchBar.value).getKeywordsFromInput()
-    } 
-    else {
+    } else {
       // Makes sure recipes are visible again if user deletes his search input
       document.querySelectorAll(".recipe-card_container").forEach((card) => {
         card.setAttribute("data-display-recipe", true)
       })
+      new Search(searchBar.value).manageAllTopFilters()
     }
   })
 }

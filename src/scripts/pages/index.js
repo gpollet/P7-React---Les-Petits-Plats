@@ -1,12 +1,9 @@
 import { activeFilters } from "../components/active-filters.js"
 import { createHeader } from "../components/header.js"
 import { createSearchBar } from "../components/search-bar.js"
-import {
-  createRecipeFilters,
-  createTopFilters,
-} from "../components/top-filters.js"
+import { createRecipeFilters, createTopFilters } from "../components/top-filters.js"
 import { Recipe } from "../models/Recipe.js"
-import { dataset } from "../store/store.js"
+import { dataset, recipesTitlesKeywords } from "../store/store.js"
 import { Utils } from "../utils/Utils.js"
 
 export function displayHome(data) {
@@ -23,7 +20,9 @@ export function displayHome(data) {
   const recipeCards = data.map((recipe) => {
     new Recipe(recipe).displayRecipeCard(recipeListContainer)
     createStoreDataset(recipe)
+    getRecipesKeywords(recipe)
   })
+  normalizeIngredientsData()
   Utils.sortData(dataset)
   createTopFilters()
 }
@@ -55,4 +54,23 @@ function createStoreDataset(data) {
       }
     })
   }
+}
+
+// In each recipe names, filters out words shorter than 3 letters, then create a sublist of strings for each remaining words.
+function getRecipesKeywords(recipe) {
+  const keywords = recipe.name.split(" ")
+  let recipeKeywords = { id: recipe.id, keywords: [] }
+  const keyword = keywords.map((keyword) => {
+    if (keyword.length >= 3) {
+      recipeKeywords.keywords.push(Utils.formatStringCharacters(keyword))
+    }
+  })
+  recipesTitlesKeywords.push(recipeKeywords)
+}
+
+function normalizeIngredientsData() {
+  dataset.ingredient.forEach((value) => {
+    const ingredientIndex = dataset.ingredient.indexOf(value)
+    dataset.ingredient[ingredientIndex] = Utils.formatStringCharacters(value)
+  })
 }
