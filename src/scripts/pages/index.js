@@ -22,7 +22,7 @@ export function displayHome(data) {
     createStoreDataset(recipe)
     getRecipesKeywords(recipe)
   })
-  normalizeIngredientsData()
+  normalizeDatasetValues()
   Utils.sortData(dataset)
   createTopFilters()
 }
@@ -68,9 +68,11 @@ function getRecipesKeywords(recipe) {
   recipesTitlesKeywords.push(recipeKeywords)
 }
 
-function normalizeIngredientsData() {
-  dataset.ingredient.forEach((value) => {
-    const ingredientIndex = dataset.ingredient.indexOf(value)
-    dataset.ingredient[ingredientIndex] = Utils.formatStringCharacters(value)
-  })
+function normalizeDatasetValues() {
+  for (let [key] of Object.entries(dataset)) {
+    dataset[key].forEach((value) => {
+      const ingredientIndex = dataset[key].indexOf(value)
+      dataset[key][ingredientIndex] = Utils.formatStringCharacters(value)
+    })
+  }
 }
