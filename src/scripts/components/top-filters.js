@@ -1,4 +1,5 @@
 import { dataset, filterDisplayStatus, userSelectedFilters } from "../store/store.js"
+import { Search } from "../utils/Search.js"
 import { chevronIcon, Utils } from "../utils/Utils.js"
 import { activeFilters } from "./active-filters.js"
 
@@ -36,7 +37,7 @@ export const createTopFilters = () => {
       suggestionListItem.textContent += `${el}`
       suggestionListItem.addEventListener("click", () => {
         // Checks if filter was not already set active by user, if not set it as active then remove it from the list
-        if (!userSelectedFilters[key].includes(el)) {
+        if (!userSelectedFilters[key].includes(Utils.formatStringCharacters(el))) {
           new activeFilters(key, el, suggestionListItem).addActiveFilter()
           suggestionListItem.setAttribute("data-filter-visible", false)
         }
@@ -51,6 +52,7 @@ export const createTopFilters = () => {
 const createFilterButtonsEvents = () => {
   const categoryChevron = document.querySelectorAll(".top-filters_container svg")
   for (let chevron of categoryChevron) {
+    // Clicking on top filter chevron opens/close the suggestions and turns the chevron up/down depending on its previous state (opened/closed)
     chevron.addEventListener("click", (event) => {
       new filterButtonState(event, chevron).manageState()
     })
@@ -63,7 +65,18 @@ const createFilterButtonsEvents = () => {
   }
   const filterInputsFields = document.querySelectorAll("label > input")
   for (let inputField of filterInputsFields) {
-    inputField.addEventListener("input", () => filterButtonState.filtersStateListener())
+    inputField.addEventListener("input", (event) => {
+      //console.log(event.target)
+      //new filterButtonState(event).displayFilterList()
+      //filterButtonState.filtersStateListener()
+      //const chevron = event.target.closest(".top-filters_container").children[1]
+      //new filterButtonState(event, chevron).manageState()
+      //new Search(inputField.value).getKeywordsFromInput()
+    })
+    // Resets top-filter input field on focusout if user simply input a space
+    inputField.addEventListener("focusout", (event) => {
+      if (event.target.value == " ") event.target.value = ""
+    })
   }
 }
 
@@ -71,7 +84,7 @@ class filterButtonState {
   constructor(event, chevron) {
     this.event = event
     this.chevron = chevron
-    this.filterSuggestionsContainer = event.target.nextElementSibling
+    this.filterSuggestionsContainer = this.event.target.closest(".top-filters_container").children[2]
     this.filterCategory = this.filterSuggestionsContainer.getAttribute("data-filter-category")
     this.currentDisplayState = filterDisplayStatus[this.filterCategory]
   }
@@ -98,8 +111,8 @@ class filterButtonState {
   manageState() {
     filterButtonState.filtersStateListener()
     if (this.currentDisplayState == false) {
-      // Closes all filter menus
       // Opens selected menu
+      // Closes all filter menus
       this.displayFilterList()
     } else {
       this.hideFilterList()
