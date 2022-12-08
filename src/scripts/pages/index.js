@@ -1,7 +1,7 @@
 import { activeFilters } from "../components/active-filters.js"
 import { createHeader } from "../components/header.js"
 import { createSearchBar } from "../components/search-bar.js"
-import { createRecipeFilters, createTopFilters } from "../components/top-filters.js"
+import { createRecipeFilters, createTopFilters, createTopFiltersInputsEvents } from "../components/top-filters.js"
 import { Recipe } from "../models/Recipe.js"
 import { dataset, recipesTitlesKeywords } from "../store/store.js"
 import { Utils } from "../utils/Utils.js"
@@ -25,6 +25,7 @@ export function displayHome(data) {
   normalizeDatasetValues()
   Utils.sortData(dataset)
   createTopFilters()
+  createTopFiltersInputsEvents()
 }
 
 // Creates a list of all possible ingredients, appliances and ustensils based on the recipes data

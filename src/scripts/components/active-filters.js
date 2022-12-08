@@ -13,11 +13,6 @@ export class activeFilters {
     const activeFiltersContainer = document.createElement("div")
     activeFiltersContainer.className = "active-filters_container"
     parent.appendChild(activeFiltersContainer)
-    //for (let [key] of Object.entries(userSelectedFilters)) {
-    //  const categoryContainer = document.createElement("div")
-    //  categoryContainer.className = `active-filters_${key}-container`
-    //  activeFiltersContainer.appendChild(categoryContainer)
-    //}
   }
 
   // Adds selected item to active filter if it is not already active
@@ -33,10 +28,15 @@ export class activeFilters {
     } else {
       activeFilterCategoryContainer = document.querySelectorAll(
         `.active-filters_item.${this.category}`
-        )
-        activeFilterCategoryContainer[activeFilterCategoryContainer.length-1].insertAdjacentElement("afterend", newActiveFilterButton)
+      )
+      activeFilterCategoryContainer[activeFilterCategoryContainer.length - 1].insertAdjacentElement(
+        "afterend",
+        newActiveFilterButton
+      )
     }
-    userSelectedFilters[this.category].push(this.item)
+    if (!userSelectedFilters[this.category].includes(Utils.formatStringCharacters(this.item))) {
+      userSelectedFilters[this.category].push(Utils.formatStringCharacters(this.item))
+    }
     this.removeActiveFilterEvent(newActiveFilterButton)
   }
 
@@ -45,7 +45,7 @@ export class activeFilters {
     activeFilterButton.addEventListener("click", (event) => {
       if (event.target.classList.value == "active-filter-close_button") {
         userSelectedFilters[this.category] = userSelectedFilters[this.category].filter(
-          (el) => el !== this.item
+          (el) => el !== Utils.formatStringCharacters(this.item)
         )
         activeFilterButton.remove()
         this.suggestedElement.setAttribute("data-filter-visible", true)
