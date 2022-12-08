@@ -35,6 +35,7 @@ export const createTopFilters = () => {
       el = Utils.stringFirstLetterToUpperCase(el)
       const suggestionListItem = document.createElement("li")
       suggestionListItem.textContent += `${el}`
+      suggestionListItem.setAttribute("data-filter-visible", true)
       suggestionListItem.addEventListener("click", () => {
         // Checks if filter was not already set active by user, if not set it as active then remove it from the list
         if (!userSelectedFilters[key].includes(Utils.formatStringCharacters(el))) {

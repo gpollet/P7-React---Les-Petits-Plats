@@ -82,22 +82,21 @@
     &-list {
       margin: 0;
       max-height: 20em;
-      -moz-column-count: 3;
-           column-count: 3;
-      -moz-column-fill: balance;
-           column-fill: balance;
       width: 40em;
+      overflow-y: auto;
+      padding: 0 2em;
       @media (max-width: 550px) {
         padding-left: $top-filter-padding_left;
-        -moz-column-count: 2;
-             column-count: 2;
         width: 95%;
       }
       & li {
-        width: -webkit-fit-content;
-        width: -moz-fit-content;
-        width: fit-content;
-        line-height: 2em;
+        width: 30%;
+        @media (max-width: 550px) {
+          padding: 0 0.5em;
+          width: 40%;
+        }
+        margin: 0.5em;
+        vertical-align: middle;
         list-style: none;
         color: white;
         &:hover {
@@ -150,5 +149,5 @@
   display: none;
 }
 [data-filter-visible="true"] {
-  display: block;
+  display: inline-block;
 }
