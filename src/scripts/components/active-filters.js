@@ -42,14 +42,16 @@ export class activeFilters {
 
   // Removes active filter from the store and the DOM when clicking on its "X" icon
   removeActiveFilterEvent(activeFilterButton) {
+    console.log(userSelectedFilters)
     activeFilterButton.addEventListener("click", (event) => {
       if (event.target.classList.value == "active-filter-close_button") {
         userSelectedFilters[this.category] = userSelectedFilters[this.category].filter(
-          (el) => el !== this.item
+          (el) => el !== Utils.formatStringCharacters(this.item)
         )
         activeFilterButton.remove()
         this.suggestedElement.setAttribute("data-filter-visible", true)
       }
     })
+    console.log(userSelectedFilters)
   }
 }
