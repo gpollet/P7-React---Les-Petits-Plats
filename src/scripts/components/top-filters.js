@@ -36,6 +36,7 @@ export const createTopFilters = () => {
       const suggestionListItem = document.createElement("li")
       suggestionListItem.textContent += `${el}`
       suggestionListItem.setAttribute("data-filter-visible", true)
+      suggestionListItem.className = `top-filters_suggestions-${key}`
       suggestionListItem.addEventListener("click", () => {
         // Checks if filter was not already set active by user, if not set it as active then remove it from the list
         if (!userSelectedFilters[key].includes(Utils.formatStringCharacters(el))) {
@@ -64,15 +65,13 @@ const createFilterButtonsEvents = () => {
       new filterButtonState(event, chevron).manageState()
     })
   }
+}
+
+export const createTopFiltersInputsEvents = () => {
   const filterInputsFields = document.querySelectorAll("label > input")
   for (let inputField of filterInputsFields) {
     inputField.addEventListener("input", (event) => {
-      //console.log(event.target)
-      //new filterButtonState(event).displayFilterList()
-      //filterButtonState.filtersStateListener()
-      //const chevron = event.target.closest(".top-filters_container").children[1]
-      //new filterButtonState(event, chevron).manageState()
-      //new Search(inputField.value).getKeywordsFromInput()
+      new Search(inputField.value).searchMatchingIngredients(event.target)
     })
     // Resets top-filter input field on focusout if user simply input a space
     inputField.addEventListener("focusout", (event) => {

@@ -24,7 +24,19 @@ export class Search {
         .setAttribute("data-display-recipe", true)
       this.searchMatchingTopFilters(recipe.id)
     })
-    //this.searchActiveIngredientsTagsMatches()
+  }
+
+  // When user types in top filter inputs, hides items that do not match
+  searchMatchingIngredients(targetInput) {
+    const matchingTopFilterElement = document.querySelectorAll(`.top-filters_suggestions-${targetInput.id}`)
+    matchingTopFilterElement.forEach((el) => {
+      const elementNormalizedTextContent = Utils.formatStringCharacters(el.textContent)
+      if (elementNormalizedTextContent.includes(Utils.formatStringCharacters(this.userInput)) && !userSelectedFilters[targetInput.id].includes(elementNormalizedTextContent)) {
+        this.displayTopFiltersElements(el)
+      } else {
+        this.hideNonTopFiltersElements(el)
+      }
+    })
   }
 
   // If user input in main search bar is < 3 characters, display all list items in the top filters
@@ -49,10 +61,11 @@ export class Search {
     element.setAttribute("data-filter-visible", false)
   }
 
+  // Displays/hides items listed in the top filters based on the recipes being displayed
   searchMatchingTopFilters(matchingRecipeId) {
     if (matchingRecipeId) {
       const matchingRecipeData = recipes.find((recipe) => recipe.id == matchingRecipeId)
-      // List ingredients, ustenssils and appliances matching the main search bar results
+      // List ingredients, ustensils and appliances matching the main search bar results
       let matchingTopFilters = { ingredient: "", ustensils: "", appliance: "" }
       matchingTopFilters.ingredient = matchingRecipeData.ingredients.map((ingredient) =>
         Utils.formatStringCharacters(ingredient.ingredient)
@@ -70,13 +83,18 @@ export class Search {
         for (let element of topFilterListElements) {
           const elementNormalizedTextContent = Utils.formatStringCharacters(element.textContent)
           let elementIsActiveFilter = false
+          // If element is an active filter, do not display it back into the suggested top filter items
           for (let [key] of Object.entries(userSelectedFilters)) {
             if (userSelectedFilters[key].includes(elementNormalizedTextContent)) {
               elementIsActiveFilter = true
               break
             }
           }
-          if (matchingTopFilters[key].includes(elementNormalizedTextContent) && !elementIsActiveFilter) {
+          // If element is not an active top filter but matches the displayed recipes, display it in the top filter suggestions
+          if (
+            matchingTopFilters[key].includes(elementNormalizedTextContent) &&
+            !elementIsActiveFilter
+          ) {
             this.displayTopFiltersElements(element)
           }
         }
