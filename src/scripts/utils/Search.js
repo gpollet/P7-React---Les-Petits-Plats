@@ -9,16 +9,29 @@ export class Search {
   }
 
   searchMatchingTitles() {
-    this.matchingRecipes = recipesTitlesKeywords.filter((recipe) =>
+    // Finds recipes with title matching user's input
+    const matchingTitles = recipesTitlesKeywords.filter((recipe) =>
       recipe.keywords.find((el) => el.includes(this.userInput))
     )
+    // Finds recipes with description matching user's input
+    const matchingDescriptions = recipes.filter((recipe) =>
+      Utils.formatStringCharacters(recipe.description).includes(this.userInput)
+    )
+    const matchingIngredients = recipes.filter((recipe) =>
+      recipe.ingredients
+        // Creates a single array containing all recipe's ingredients, then convert it to string to check if it contains user's input
+        .flatMap((ingredient) => Utils.formatStringCharacters(ingredient.ingredient))
+        .toString()
+        .includes(this.userInput)
+    )
+    this.matchingRecipe = matchingTitles.concat(matchingDescriptions).concat(matchingIngredients)
     const recipeCards = document.querySelectorAll(".recipe-card_container")
     recipeCards.forEach((card) => {
       card.setAttribute("data-display-recipe", false)
     })
     // Sets visibility of top filters to false, then if filter matches user input, set it to true
     this.manageAllTopFilters()
-    this.matchingRecipes.forEach((recipe) => {
+    this.matchingRecipe.forEach((recipe) => {
       document
         .querySelector(`[data-card-id="${recipe.id}"]`)
         .setAttribute("data-display-recipe", true)
@@ -28,10 +41,15 @@ export class Search {
 
   // When user types in top filter inputs, hides items that do not match
   searchMatchingIngredients(targetInput) {
-    const matchingTopFilterElement = document.querySelectorAll(`.top-filters_suggestions-${targetInput.id}`)
+    const matchingTopFilterElement = document.querySelectorAll(
+      `.top-filters_suggestions-${targetInput.id}`
+    )
     matchingTopFilterElement.forEach((el) => {
       const elementNormalizedTextContent = Utils.formatStringCharacters(el.textContent)
-      if (elementNormalizedTextContent.includes(Utils.formatStringCharacters(this.userInput)) && !userSelectedFilters[targetInput.id].includes(elementNormalizedTextContent)) {
+      if (
+        elementNormalizedTextContent.includes(Utils.formatStringCharacters(this.userInput)) &&
+        !userSelectedFilters[targetInput.id].includes(elementNormalizedTextContent)
+      ) {
         this.displayTopFiltersElements(el)
       } else {
         this.hideNonTopFiltersElements(el)
@@ -102,8 +120,14 @@ export class Search {
     }
   }
 
-  searchActiveIngredientsTagsMatches() {
-    console.log(userSelectedFilters)
+  searchRecipesMatchingTopFilters() {
+    console.log(this.userInput)
+    const recipeIngredients = recipes.map((recipe) => recipe.ingredients)
+    console.log(recipes)
+    //recipes.forEach((recipe) => {
+    //  console.log(Object.values(recipe.ingredients))
+    //  console.log(Object.values(recipe.ingredients).includes("Oignon"))
+    //})
     if (userSelectedFilters.ingredient.length > 0) {
       //console.log("ok")
     }
