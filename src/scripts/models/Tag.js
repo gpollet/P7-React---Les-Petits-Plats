@@ -2,7 +2,7 @@ import { userSelectedFilters } from "../store/store.js"
 import { Search } from "../utils/Search.js"
 import { closeIcon, Utils } from "../utils/Utils.js"
 
-export class activeFilters {
+export class Tag {
   constructor(category, item, suggestedElement) {
     this.category = category
     this.item = item
@@ -15,36 +15,6 @@ export class activeFilters {
     activeFiltersContainer.className = "active-filters_container"
     parent.appendChild(activeFiltersContainer)
   }
-
-  //// Watch for added/removed active top-filters on DOM changes
-  //static watchActiveFilters() {
-  //  const nodeToObserve = document.querySelector(".active-filters_container")
-  //  // What to do on DOM changes
-  //  const actionOnDOMChange = new MutationObserver((event) => {
-  //    event.map((domEvent) => {
-  //      // If active top filter is added
-  //      if (domEvent.addedNodes.length !== 0) {
-  //        domEvent.addedNodes.forEach((newEl) => {
-  //          console.log(newEl.value)
-  //          const displayedIngredients = document.querySelectorAll("[data-recipe-id] li")
-  //          console.log(Object.values(displayedIngredients))
-  //          console.log(Object.values(displayedIngredients).includes(newEl.value))
-            
-  //          //new Search(newEl.value)
-  //        })
-  //      }
-  //      // If active top filter is removed
-  //      if (domEvent.removedNodes.length !== 0) {
-  //        domEvent.removedNodes.forEach((removedEl) => {
-  //          console.log(removedEl.value)
-  //        })
-  //      }
-  //      //console.log(domEvent)
-  //    })
-  //  })
-  //  // Watch DOM change for both active filters container and its children
-  //  actionOnDOMChange.observe(nodeToObserve, { childList: true })
-  //}
 
   // Adds selected item to active filter if it is not already active
   addActiveFilter() {
@@ -85,6 +55,7 @@ export class activeFilters {
         )
         activeFilterButton.remove()
         this.suggestedElement.setAttribute("data-filter-visible", true)
+        new Search(this.item).searchRecipesMatchingTopFilters(this.category)
       }
     })
   }

@@ -1,7 +1,7 @@
 import { dataset, filterDisplayStatus, userSelectedFilters } from "../store/store.js"
 import { Search } from "../utils/Search.js"
 import { chevronIcon, Utils } from "../utils/Utils.js"
-import { activeFilters } from "./active-filters.js"
+import { Tag } from "../models/Tag.js"
 
 export const createRecipeFilters = (main) => {
   let container = document.createElement("div")
@@ -26,7 +26,6 @@ export const createRecipeFilters = (main) => {
 
 // For each top filter category, retrieves the category name and populates the top filter with the corresponding entries from the Store
 export const createTopFilters = () => {
-  const topFilters = document.querySelectorAll(".top-filters_container")
   for (let [key, value] of Object.entries(dataset)) {
     const topFilterList = document.querySelector(
       `[data-filter-list-category=${key}].top-filters_suggestions-list`
@@ -40,7 +39,7 @@ export const createTopFilters = () => {
       suggestionListItem.addEventListener("click", () => {
         // Checks if filter was not already set active by user, if not set it as active then remove it from the list
         if (!userSelectedFilters[key].includes(Utils.formatStringCharacters(el))) {
-          new activeFilters(key, el, suggestionListItem).addActiveFilter()
+          new Tag(key, el, suggestionListItem).addActiveFilter()
           suggestionListItem.setAttribute("data-filter-visible", false)
         }
       })

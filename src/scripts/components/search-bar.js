@@ -1,3 +1,4 @@
+import { matchingRecipes } from "../store/store.js"
 import { Search } from "../utils/Search.js"
 import { Utils } from "../utils/Utils.js"
 
@@ -9,14 +10,20 @@ export function createSearchBar(container) {
 function searchBarEventListener() {
   const searchBar = document.querySelector(".top-search_bar")
   searchBar.addEventListener("input", () => {
+    // On each input, resets matchingRecipes (otherwise it would keep matching recipes from previous inputs)
+    matchingRecipes.splice(0)
     if (searchBar.value.length >= 3) {
-      new Search(searchBar.value).searchMatchingTitles()
+      new Search(searchBar.value).getMainSearchMatchingRecipes()
     } else {
       // Makes sure recipes are visible again if user input is < 3 characters
       document.querySelectorAll(".recipe-card_container").forEach((card) => {
         card.setAttribute("data-display-recipe", true)
       })
-      new Search(searchBar.value).manageAllTopFilters()
+      // If user input in main search bar is < 3 characters, displays all suggested items in the top filters
+      const topFiltersLists = document.querySelectorAll(".top-filters_suggestions-list li")
+      for (let element of topFiltersLists) {
+        element.setAttribute("data-filter-visible", true)
+      }
     }
   })
 }
