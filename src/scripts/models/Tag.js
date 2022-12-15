@@ -7,7 +7,7 @@ export class Tag {
     this.category = category
     this.item = item
     this.suggestedElement = suggestedElement
-    this.container = document.querySelector(".active-filters_container")
+    //this.container = document.querySelector(".active-filters_container")
   }
 
   static createActiveFiltersContainer(parent) {
@@ -41,9 +41,10 @@ export class Tag {
     // Adds the new active filter to the store keeping track of user selected filters
     if (!userSelectedFilters[this.category].includes(Utils.formatStringCharacters(this.item))) {
       userSelectedFilters[this.category].push(Utils.formatStringCharacters(this.item))
+      new Search(this.item).getRecipesMatchingAddedTag(this.category)
     }
     this.removeActiveFilterEvent(newActiveFilterButton)
-    new Search(this.item).searchRecipesMatchingTopFilters(this.category)
+    //new Search(this.item).searchMatchingTopFilters()
   }
 
   // Removes active filter from the store and the DOM when clicking on its "X" icon
@@ -55,7 +56,7 @@ export class Tag {
         )
         activeFilterButton.remove()
         this.suggestedElement.setAttribute("data-filter-visible", true)
-        new Search(this.item).searchRecipesMatchingTopFilters(this.category)
+        //new Search(this.item).searchMatchingTopFilters()
       }
     })
   }

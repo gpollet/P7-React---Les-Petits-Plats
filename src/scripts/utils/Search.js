@@ -1,4 +1,3 @@
-import { recipes } from "../api/recipes.js"
 import { matchingRecipes, recipesData, userSelectedFilters } from "../store/store.js"
 import { Utils } from "./Utils.js"
 
@@ -30,14 +29,14 @@ export class Search {
   }
 
   // When user types in top filter inputs, hides items that do not match
-  searchMatchingIngredients(targetInput) {
+  searchMatchingIngredients(eventTarget) {
     const matchingTopFilterElement = document.querySelectorAll(
-      `.top-filters_suggestions-${targetInput.id}`
+      `.top-filters_suggestions-${eventTarget.id}`
     )
     matchingTopFilterElement.forEach((el) => {
       const elementNormalizedTextContent = Utils.formatStringCharacters(el.textContent)
       elementNormalizedTextContent.includes(this.userInput) &&
-      !userSelectedFilters[targetInput.id].includes(elementNormalizedTextContent)
+      !userSelectedFilters[eventTarget.id].includes(elementNormalizedTextContent)
         ? this.displayTopFiltersElements(el)
         : this.hideNonTopFiltersElements(el)
     })
@@ -74,45 +73,14 @@ export class Search {
     })
   }
 
-  /*
-  searchMatchingTopFilters(matchingRecipeId) {
-    if (matchingRecipeId) {
-      const matchingRecipeData = recipes.find((recipe) => recipe.id == matchingRecipeId)
-      // List ingredients, ustensils and appliances matching the main search bar results
-      let matchingTopFilters = { ingredient: "", ustensils: "", appliance: "" }
-      matchingTopFilters.ingredient = matchingRecipeData.ingredients.map((ingredient) =>
-        Utils.formatStringCharacters(ingredient.ingredient)
-      )
-      matchingTopFilters.ustensils = matchingRecipeData.ustensils.map((ustensil) =>
-        Utils.formatStringCharacters(ustensil)
-      )
-      matchingTopFilters.appliance = Utils.formatStringCharacters(matchingRecipeData.appliance)
-      // Hides non-matching elements from top filters
-      let topFilterListElements
-      for (let [key] of Object.entries(matchingTopFilters)) {
-        topFilterListElements = document.querySelector(
-          `[data-filter-list-category='${key}']`
-        ).children
-        for (let element of topFilterListElements) {
-          const elementNormalizedTextContent = Utils.formatStringCharacters(element.textContent)
-          let elementIsActiveFilter = false
-          // If element is an active filter, do not display it back into the suggested top filter items
-          for (let [key] of Object.entries(userSelectedFilters)) {
-            if (userSelectedFilters[key].includes(elementNormalizedTextContent)) {
-              elementIsActiveFilter = true
-              break
-            }
-          }
-          // If element is not an active top filter but matches the displayed recipes, display it in the top filter suggestions
-          if (
-            matchingTopFilters[key].includes(elementNormalizedTextContent) &&
-            !elementIsActiveFilter
-          ) {
-            this.displayTopFiltersElements(element)
-          }
-        }
-      }
-    }
+  getRecipesMatchingAddedTag(tagCategory) {
+    if (tagCategory == "ingredient") tagCategory = "ingredients"
+    const results = matchingRecipes.filter((recipe) => 
+      recipe[tagCategory].includes(this.userInput)
+    )
+    matchingRecipes.splice(0)
+    results.forEach((result) => matchingRecipes.push(result))
+    this.searchMatchingTopFilters()
+    this.displayMatchingRecipeCards()
   }
-  */
 }

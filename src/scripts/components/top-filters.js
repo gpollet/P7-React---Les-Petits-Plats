@@ -32,18 +32,19 @@ export const createTopFilters = () => {
     )
     value.map((el) => {
       el = Utils.stringFirstLetterToUpperCase(el)
-      const suggestionListItem = document.createElement("li")
-      suggestionListItem.textContent += `${el}`
-      suggestionListItem.setAttribute("data-filter-visible", true)
-      suggestionListItem.className = `top-filters_suggestions-${key}`
-      suggestionListItem.addEventListener("click", () => {
+      const tagElement = document.createElement("li")
+      tagElement.textContent += `${el}`
+      tagElement.setAttribute("data-filter-visible", true)
+      tagElement.className = `top-filters_suggestions-${key}`
+      tagElement.addEventListener("click", () => {
         // Checks if filter was not already set active by user, if not set it as active then remove it from the list
         if (!userSelectedFilters[key].includes(Utils.formatStringCharacters(el))) {
-          new Tag(key, el, suggestionListItem).addActiveFilter()
-          suggestionListItem.setAttribute("data-filter-visible", false)
+          new Tag(key, el, tagElement).addActiveFilter()
+          tagElement.setAttribute("data-filter-visible", false)
+          //new Search(el).getRecipesMatchingAddedTag()
         }
       })
-      topFilterList.appendChild(suggestionListItem)
+      topFilterList.appendChild(tagElement)
     })
   }
   createFilterButtonsEvents()

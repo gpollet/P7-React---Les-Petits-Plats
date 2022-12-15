@@ -3,7 +3,7 @@ import { createHeader } from "../components/header.js"
 import { createSearchBar } from "../components/search-bar.js"
 import { createRecipeFilters, createTopFilters, createTopFiltersInputsEvents } from "../components/top-filters.js"
 import { Recipe } from "../models/Recipe.js"
-import { dataset, matchingRecipes } from "../store/store.js"
+import { dataset, matchingRecipes, recipesData } from "../store/store.js"
 import { Utils } from "../utils/Utils.js"
 import { recipes } from "../api/recipes.js"
 
@@ -27,6 +27,7 @@ export function displayHome(data) {
   Utils.sortData(dataset)
   createTopFilters()
   createTopFiltersInputsEvents()
+  recipesData.forEach(el => matchingRecipes.push(el))
 }
 
 // Creates a list of all possible ingredients, appliances and ustensils based on the recipes data
