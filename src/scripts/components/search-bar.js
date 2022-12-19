@@ -14,7 +14,8 @@ function searchBarEventListener() {
     if (searchBar.value.length >= 3) {
       new Search(searchBar.value).getMainSearchMatchingRecipes()
     } else {
-      // Makes sure recipes are visible again if user input is < 3 characters
+      // Makes sure recipes are visible again if user input is < 3 characters, and resets matchingRecipes
+      store.matchingRecipes = store.recipesData
       document.querySelectorAll(".recipe-card_container").forEach((card) => {
         card.setAttribute("data-display-recipe", true)
       })

@@ -55,6 +55,7 @@ export class Search {
   // Displays/hides items listed in the top filters based on the recipes being displayed
   searchMatchingTopFilters() {
     const availableTags = document.querySelectorAll(".top-filters_suggestions-list li")
+    // Hide all available tags, and if they match the displayed recipes, sets their visibility back to true
     availableTags.forEach((tag) => {
       tag.setAttribute("data-filter-visible", false)
     })
@@ -70,7 +71,10 @@ export class Search {
           `[data-filter-list-category="${key}"] .top-filters_suggestions-${key}`
         )
         targetEl.forEach((el) => {
-          if (value.includes(Utils.formatStringCharacters(el.textContent)))
+          if (value.includes(Utils.formatStringCharacters(el.textContent))
+          && !store.userSelectedFilters[key].includes(Utils.formatStringCharacters(el.textContent))
+          )
+          //console.log(store.userSelectedFilters[key].includes(Utils.formatStringCharacters(el.textContent)))
             el.setAttribute("data-filter-visible", true)
         })
       })
