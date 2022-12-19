@@ -1,4 +1,4 @@
-import { matchingRecipes, recipesData, userSelectedFilters } from "../store/store.js"
+import { store } from "../store/store.js"
 import { Utils } from "./Utils.js"
 
 export class Search {
@@ -8,13 +8,13 @@ export class Search {
 
   getMainSearchMatchingRecipes() {
     // Finds recipes with title, ingredients or description matching user's input
-    const mainSearchMatchingRecipes = recipesData.filter(
+    const mainSearchMatchingRecipes = store.recipesData.filter(
       (recipe) =>
         recipe.name.includes(this.userInput) ||
         recipe.description.includes(this.userInput) ||
         recipe.ingredients.toString().includes(this.userInput)
     )
-    mainSearchMatchingRecipes.forEach((el) => matchingRecipes.push(el))
+    mainSearchMatchingRecipes.forEach((el) => store.matchingRecipes.push(el))
     this.displayMatchingRecipeCards()
     this.searchMatchingTopFilters()
   }
@@ -22,7 +22,7 @@ export class Search {
   displayMatchingRecipeCards() {
     const recipeCards = document.querySelectorAll(".recipe-card_container")
     recipeCards.forEach((card) => {
-      matchingRecipes.find((recipe) => recipe.id == card.getAttribute("data-card-id"))
+      store.matchingRecipes.find((recipe) => recipe.id == card.getAttribute("data-card-id"))
         ? card.setAttribute("data-display-recipe", true)
         : card.setAttribute("data-display-recipe", false)
     })
@@ -36,7 +36,7 @@ export class Search {
     matchingTopFilterElement.forEach((el) => {
       const elementNormalizedTextContent = Utils.formatStringCharacters(el.textContent)
       elementNormalizedTextContent.includes(this.userInput) &&
-      !userSelectedFilters[eventTarget.id].includes(elementNormalizedTextContent)
+      !store.userSelectedFilters[eventTarget.id].includes(elementNormalizedTextContent)
         ? this.displayTopFiltersElements(el)
         : this.hideNonTopFiltersElements(el)
     })
@@ -55,8 +55,9 @@ export class Search {
   // Displays/hides items listed in the top filters based on the recipes being displayed
   searchMatchingTopFilters() {
     let matchingRecipesSuggestedTags = []
-    matchingRecipes.map((recipe) => {
+    store.matchingRecipes.map((recipe) => {
       let categoryToCheck = [recipe.ingredients, recipe.ustensils, [recipe.appliance]]
+      console.log(categoryToCheck)
       Object.values(categoryToCheck).forEach((element) => {
         element.map((entry) => {
           if (!matchingRecipesSuggestedTags.includes(entry))
@@ -75,11 +76,28 @@ export class Search {
 
   getRecipesMatchingAddedTag(tagCategory) {
     if (tagCategory == "ingredient") tagCategory = "ingredients"
-    const results = matchingRecipes.filter((recipe) => 
+    const results = store.matchingRecipes.filter((recipe) =>
       recipe[tagCategory].includes(this.userInput)
     )
-    matchingRecipes.splice(0)
-    results.forEach((result) => matchingRecipes.push(result))
+    store.matchingRecipes = results
+    this.searchMatchingTopFilters()
+    this.displayMatchingRecipeCards()
+  }
+
+  getRecipesMatchingRemovedTag(tagCategory) {
+    store.matchingRecipes = store.recipesData
+    if (tagCategory == "ingredient") tagCategory = "ingredients"
+    for (let keys of Object.keys(store.userSelectedFilters)) {
+      // Checks if there are active tags
+      if (store.userSelectedFilters[keys].length > 0) {
+        for (let [key] of Object.entries(store.userSelectedFilters)) {
+          for (let value of Object.values(store.userSelectedFilters[key])) {
+            this.userInput = value
+            return this.getRecipesMatchingAddedTag(key)
+          }
+        }
+      }
+    }
     this.searchMatchingTopFilters()
     this.displayMatchingRecipeCards()
   }

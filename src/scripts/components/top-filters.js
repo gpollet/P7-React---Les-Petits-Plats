@@ -1,4 +1,4 @@
-import { dataset, filterDisplayStatus, userSelectedFilters } from "../store/store.js"
+import { store } from "../store/store.js"
 import { Search } from "../utils/Search.js"
 import { chevronIcon, Utils } from "../utils/Utils.js"
 import { Tag } from "../models/Tag.js"
@@ -6,17 +6,17 @@ import { Tag } from "../models/Tag.js"
 export const createRecipeFilters = (main) => {
   let container = document.createElement("div")
   container.className = "top-filters-list_container"
-  for (let filter of Object.keys(dataset)) {
+  for (let filter of Object.keys(store.dataset)) {
     let displayFormat = Utils.getTopFiltersDisplayNames(filter)
     container.innerHTML += `<div class="top-filters_container">
     <label for="${filter}">
     <input type="search" class="top-filters_${filter} ${filter}" id="${filter}" name="${filter}" placeholder="${displayFormat}" aria-label="Rechercher par ${displayFormat}" data-active-filter="${
-      filterDisplayStatus[filter]
+      store.filterDisplayStatus[filter]
     }"></input>
     </label>
  ${new chevronIcon().createChevronIcon("chevron-down")}
     <div class="top-filters_suggestions-container ${filter}" data-filter-visible="${
-      filterDisplayStatus[filter]
+      store.filterDisplayStatus[filter]
     }" data-filter-category="${filter}">
     <ul class="top-filters_suggestions-list" data-filter-list-category="${filter}"></ul>
     </div></div>`
@@ -26,7 +26,7 @@ export const createRecipeFilters = (main) => {
 
 // For each top filter category, retrieves the category name and populates the top filter with the corresponding entries from the Store
 export const createTopFilters = () => {
-  for (let [key, value] of Object.entries(dataset)) {
+  for (let [key, value] of Object.entries(store.dataset)) {
     const topFilterList = document.querySelector(
       `[data-filter-list-category=${key}].top-filters_suggestions-list`
     )
@@ -38,7 +38,7 @@ export const createTopFilters = () => {
       tagElement.className = `top-filters_suggestions-${key}`
       tagElement.addEventListener("click", () => {
         // Checks if filter was not already set active by user, if not set it as active then remove it from the list
-        if (!userSelectedFilters[key].includes(Utils.formatStringCharacters(el))) {
+        if (!store.userSelectedFilters[key].includes(Utils.formatStringCharacters(el))) {
           new Tag(key, el, tagElement).addActiveFilter()
           tagElement.setAttribute("data-filter-visible", false)
           //new Search(el).getRecipesMatchingAddedTag()
@@ -86,7 +86,7 @@ class filterButtonState {
     this.chevron = chevron
     this.filterSuggestionsContainer = this.event.target.closest(".top-filters_container").children[2]
     this.filterCategory = this.filterSuggestionsContainer.getAttribute("data-filter-category")
-    this.currentDisplayState = filterDisplayStatus[this.filterCategory]
+    this.currentDisplayState = store.filterDisplayStatus[this.filterCategory]
   }
 
   // When opening a new filter menu or input, makes sure any other filter menu opened is being closed before opening the new one
@@ -98,7 +98,7 @@ class filterButtonState {
       const buttonCategory = button.getAttribute("data-filter-category")
       button.previousElementSibling.innerHTML = new chevronIcon().updateChevronIcon("chevron-down")
       button.setAttribute("data-filter-visible", false)
-      filterDisplayStatus[buttonCategory] = false
+      store.filterDisplayStatus[buttonCategory] = false
       // When closing filter menu, sets category name back as placeholder
       const newPlaceholder = Utils.getTopFiltersDisplayNames(buttonCategory)
       const filterInput = document.querySelector(`.top-filters_${buttonCategory}`)
@@ -120,11 +120,11 @@ class filterButtonState {
   }
 
   displayFilterList() {
-    Object.entries(filterDisplayStatus).forEach((filterCategory) => (filterCategory.value = false))
+    Object.entries(store.filterDisplayStatus).forEach((filterCategory) => (filterCategory.value = false))
     this.event.target.classList = "chevron-up"
     this.chevron.innerHTML = new chevronIcon().updateChevronIcon("chevron-up")
     this.filterSuggestionsContainer.setAttribute("data-filter-visible", true)
-    filterDisplayStatus[this.filterCategory] = true
+    store.filterDisplayStatus[this.filterCategory] = true
     const newPlaceholder = Utils.getTopFiltersDisplayNames(this.filterCategory).toLowerCase()
     const filterInput = document.querySelector(`.top-filters_${this.filterCategory}`)
     filterInput.setAttribute(
@@ -138,7 +138,7 @@ class filterButtonState {
     this.event.target.classList = "chevron-down"
     this.chevron.innerHTML = new chevronIcon().updateChevronIcon("chevron-down")
     this.filterSuggestionsContainer.setAttribute("data-filter-visible", false)
-    filterDisplayStatus[this.filterCategory] = false
+    store.filterDisplayStatus[this.filterCategory] = false
   }
 }
 

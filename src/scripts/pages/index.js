@@ -3,9 +3,8 @@ import { createHeader } from "../components/header.js"
 import { createSearchBar } from "../components/search-bar.js"
 import { createRecipeFilters, createTopFilters, createTopFiltersInputsEvents } from "../components/top-filters.js"
 import { Recipe } from "../models/Recipe.js"
-import { dataset, matchingRecipes, recipesData } from "../store/store.js"
+import { store } from "../store/store.js"
 import { Utils } from "../utils/Utils.js"
-import { recipes } from "../api/recipes.js"
 
 export function displayHome(data) {
   const app = document.getElementById("app")
@@ -24,10 +23,10 @@ export function displayHome(data) {
     //getRecipesKeywords(recipe)
   })
   normalizeDatasetValues()
-  Utils.sortData(dataset)
+  Utils.sortData(store.dataset)
   createTopFilters()
   createTopFiltersInputsEvents()
-  recipesData.forEach(el => matchingRecipes.push(el))
+  store.recipesData.forEach(el => store.matchingRecipes.push(el))
 }
 
 // Creates a list of all possible ingredients, appliances and ustensils based on the recipes data
@@ -35,14 +34,14 @@ function createStoreDataset(data) {
   for (let entry of [data]) {
     Object.entries(entry).forEach(([key, value]) => {
       // Cf line 67
-      if (dataset[key] !== undefined)
+      if (store.dataset[key] !== undefined)
         if (
           typeof value == "string" &&
-          !Object.values(dataset[key]).includes(value.toLowerCase()) &&
+          !Object.values(store.dataset[key]).includes(value.toLowerCase()) &&
           // Checks if ingredient already exists even if it was written in singular/plural to avoid duplicates
-          !dataset[key].includes(value.toLowerCase().slice(0, value.length - 1))
+          !store.dataset[key].includes(value.toLowerCase().slice(0, value.length - 1))
         ) {
-          dataset[key].push(value.toLowerCase())
+          store.dataset[key].push(value.toLowerCase())
         }
       if (typeof value == "object") {
         // Checks :
@@ -72,10 +71,10 @@ function createStoreDataset(data) {
 //}
 
 function normalizeDatasetValues() {
-  for (let [key] of Object.entries(dataset)) {
-    dataset[key].forEach((value) => {
-      const ingredientIndex = dataset[key].indexOf(value)
-      dataset[key][ingredientIndex] = Utils.formatStringCharacters(value)
+  for (let [key] of Object.entries(store.dataset)) {
+    store.dataset[key].forEach((value) => {
+      const ingredientIndex = store.dataset[key].indexOf(value)
+      store.dataset[key][ingredientIndex] = Utils.formatStringCharacters(value)
     })
   }
 }
