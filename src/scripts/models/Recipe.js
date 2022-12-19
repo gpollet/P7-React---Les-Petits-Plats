@@ -1,5 +1,5 @@
 import { createIngredientsList, createRecipeCard } from "../components/recipe-card.js"
-import { matchingRecipes, recipesData } from "../store/store.js"
+import { store } from "../store/store.js"
 import { Utils } from "../utils/Utils.js"
 
 export class Recipe {
@@ -30,7 +30,7 @@ export class Recipe {
   
   // Fill the store with Recipes containing fields relevant for the search function, with text content normalized
   fillMatchingRecipesStoreArray() {
-    recipesData.push({
+    store.recipesData.push({
       id: this.id,
       name: Utils.formatStringCharacters(this.name),
       ingredients: this.ingredients.flatMap((ingredient) => Utils.formatStringCharacters(ingredient.ingredient)),

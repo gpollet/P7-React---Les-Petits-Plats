@@ -1,4 +1,4 @@
-import { userSelectedFilters } from "../store/store.js"
+import { store } from "../store/store.js"
 import { Search } from "../utils/Search.js"
 import { closeIcon, Utils } from "../utils/Utils.js"
 
@@ -39,8 +39,8 @@ export class Tag {
       )
     }
     // Adds the new active filter to the store keeping track of user selected filters
-    if (!userSelectedFilters[this.category].includes(Utils.formatStringCharacters(this.item))) {
-      userSelectedFilters[this.category].push(Utils.formatStringCharacters(this.item))
+    if (!store.userSelectedFilters[this.category].includes(Utils.formatStringCharacters(this.item))) {
+      store.userSelectedFilters[this.category].push(Utils.formatStringCharacters(this.item))
       new Search(this.item).getRecipesMatchingAddedTag(this.category)
     }
     this.removeActiveFilterEvent(newActiveFilterButton)
@@ -51,12 +51,12 @@ export class Tag {
   removeActiveFilterEvent(activeFilterButton) {
     activeFilterButton.addEventListener("click", (event) => {
       if (event.target.classList.value == "active-filter-close_button") {
-        userSelectedFilters[this.category] = userSelectedFilters[this.category].filter(
+        store.userSelectedFilters[this.category] = store.userSelectedFilters[this.category].filter(
           (el) => el !== Utils.formatStringCharacters(this.item)
-        )
+          )
+          new Search(this.item).getRecipesMatchingRemovedTag(this.category)
         activeFilterButton.remove()
         this.suggestedElement.setAttribute("data-filter-visible", true)
-        //new Search(this.item).searchMatchingTopFilters()
       }
     })
   }
