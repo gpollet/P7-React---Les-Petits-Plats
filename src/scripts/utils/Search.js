@@ -14,9 +14,8 @@ export class Search {
         recipe.description.includes(this.userInput) ||
         recipe.ingredients.toString().includes(this.userInput)
     )
-    mainSearchMatchingRecipes.forEach((el) => store.matchingRecipes.push(el))
+    store.matchingRecipes = mainSearchMatchingRecipes
     this.displayMatchingRecipeCards()
-    this.searchMatchingTopFilters()
   }
 
   displayMatchingRecipeCards() {
@@ -26,6 +25,7 @@ export class Search {
         ? card.setAttribute("data-display-recipe", true)
         : card.setAttribute("data-display-recipe", false)
     })
+    this.searchMatchingTopFilters()
   }
 
   // When user types in top filter inputs, hides items that do not match
@@ -54,23 +54,30 @@ export class Search {
 
   // Displays/hides items listed in the top filters based on the recipes being displayed
   searchMatchingTopFilters() {
-    let matchingRecipesSuggestedTags = []
-    store.matchingRecipes.map((recipe) => {
-      let categoryToCheck = [recipe.ingredients, recipe.ustensils, [recipe.appliance]]
-      console.log(categoryToCheck)
-      Object.values(categoryToCheck).forEach((element) => {
-        element.map((entry) => {
-          if (!matchingRecipesSuggestedTags.includes(entry))
-            matchingRecipesSuggestedTags = [...matchingRecipesSuggestedTags.flat(), entry]
+    const availableTags = document.querySelectorAll(".top-filters_suggestions-list li")
+    // Hide all available tags, and if they match the displayed recipes, sets their visibility back to true
+    availableTags.forEach((tag) => {
+      tag.setAttribute("data-filter-visible", false)
+    })
+    store.matchingRecipes.forEach((recipe) => {
+      let categoryToCheck = {
+        ingredients: recipe.ingredients,
+        ustensils: recipe.ustensils,
+        appliance: [recipe.appliance],
+      }
+      Object.entries(categoryToCheck).forEach(([key, value]) => {
+        if (key == "ingredients") key = "ingredient"
+        const targetEl = document.querySelectorAll(
+          `[data-filter-list-category="${key}"] .top-filters_suggestions-${key}`
+        )
+        targetEl.forEach((el) => {
+          if (value.includes(Utils.formatStringCharacters(el.textContent))
+          && !store.userSelectedFilters[key].includes(Utils.formatStringCharacters(el.textContent))
+          )
+          //console.log(store.userSelectedFilters[key].includes(Utils.formatStringCharacters(el.textContent)))
+            el.setAttribute("data-filter-visible", true)
         })
       })
-    })
-    const availableTags = document.querySelectorAll(".top-filters_suggestions-list li")
-    availableTags.forEach((tag) => {
-      tag.setAttribute(
-        "data-filter-visible",
-        matchingRecipesSuggestedTags.includes(Utils.formatStringCharacters(tag.textContent))
-      )
     })
   }
 
@@ -80,12 +87,17 @@ export class Search {
       recipe[tagCategory].includes(this.userInput)
     )
     store.matchingRecipes = results
-    this.searchMatchingTopFilters()
     this.displayMatchingRecipeCards()
   }
 
   getRecipesMatchingRemovedTag(tagCategory) {
     store.matchingRecipes = store.recipesData
+    // Checks if main search input is empty. If not, sets matchingRecipes as the result of that search.
+    const searchBarContent = document.querySelector(".top-search_bar").value
+    if (searchBarContent.length >= 3) {
+      this.userInput = searchBarContent
+      this.getMainSearchMatchingRecipes()
+    }
     if (tagCategory == "ingredient") tagCategory = "ingredients"
     for (let keys of Object.keys(store.userSelectedFilters)) {
       // Checks if there are active tags
@@ -98,7 +110,6 @@ export class Search {
         }
       }
     }
-    this.searchMatchingTopFilters()
     this.displayMatchingRecipeCards()
   }
 }
