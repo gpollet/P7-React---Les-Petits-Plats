@@ -17,16 +17,16 @@ export function displayHome(data) {
   const recipeListContainer = document.createElement("div")
   recipeListContainer.classList = "recipes-list_container"
   main.appendChild(recipeListContainer)
-  const recipeCards = data.map((recipe) => {
+  data.map((recipe) => {
     new Recipe(recipe).displayRecipeCard(recipeListContainer)
     createStoreDataset(recipe)
     //getRecipesKeywords(recipe)
   })
-  normalizeDatasetValues()
   Utils.sortData(store.dataset)
   createTopFilters()
   createTopFiltersInputsEvents()
-  store.recipesData.forEach(el => store.matchingRecipes.push(el))
+  normalizeDatasetValues()
+  store.matchingRecipes = [...store.recipesData]
 }
 
 // Creates a list of all possible ingredients, appliances and ustensils based on the recipes data

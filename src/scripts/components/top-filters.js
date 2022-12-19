@@ -2,6 +2,7 @@ import { store } from "../store/store.js"
 import { Search } from "../utils/Search.js"
 import { chevronIcon, Utils } from "../utils/Utils.js"
 import { Tag } from "../models/Tag.js"
+import { filterButtonState } from "../models/TopFilterState.js"
 
 export const createRecipeFilters = (main) => {
   let container = document.createElement("div")
@@ -36,12 +37,16 @@ export const createTopFilters = () => {
       tagElement.textContent += `${el}`
       tagElement.setAttribute("data-filter-visible", true)
       tagElement.className = `top-filters_suggestions-${key}`
+
       tagElement.addEventListener("click", () => {
         // Checks if filter was not already set active by user, if not set it as active then remove it from the list
-        if (!store.userSelectedFilters[key].includes(Utils.formatStringCharacters(el))) {
-          new Tag(key, el, tagElement).addActiveFilter()
-          tagElement.setAttribute("data-filter-visible", false)
-          //new Search(el).getRecipesMatchingAddedTag()
+        el = Utils.formatStringCharacters(el)
+        if (!store.userSelectedFilters[key].includes(el)) {
+          // Creates an element in the DOM displaying the added active tag
+          new Tag(key, Utils.stringFirstLetterToUpperCase(el), tagElement).addActiveFilter()
+          // Adds the new active filter to the store keeping track of user selected filters
+          store.userSelectedFilters[key].push(el)
+          new Search(el).getRecipesMatchingAddedTag(key)
         }
       })
       topFilterList.appendChild(tagElement)
@@ -70,8 +75,18 @@ const createFilterButtonsEvents = () => {
 export const createTopFiltersInputsEvents = () => {
   const filterInputsFields = document.querySelectorAll("label > input")
   for (let inputField of filterInputsFields) {
+    // When user types in top filter inputs, hides items that do not match
     inputField.addEventListener("input", (event) => {
-      new Search(inputField.value).searchMatchingIngredients(event.target)
+      const matchingTopFilterElement = document.querySelectorAll(
+        `.top-filters_suggestions-${event.target.id}`
+      )
+      matchingTopFilterElement.forEach((el) => {
+        const elementNormalizedTextContent = Utils.formatStringCharacters(el.textContent)
+        const elementMatchingStatus =
+          elementNormalizedTextContent.includes(Utils.formatStringCharacters(inputField.value.trim())) &&
+          !store.userSelectedFilters[event.target.id].includes(elementNormalizedTextContent)
+        el.setAttribute("data-filter-visible", elementMatchingStatus)
+      })
     })
     // Resets top-filter input field on focusout if user simply input a space
     inputField.addEventListener("focusout", (event) => {
@@ -79,67 +94,3 @@ export const createTopFiltersInputsEvents = () => {
     })
   }
 }
-
-class filterButtonState {
-  constructor(event, chevron) {
-    this.event = event
-    this.chevron = chevron
-    this.filterSuggestionsContainer = this.event.target.closest(".top-filters_container").children[2]
-    this.filterCategory = this.filterSuggestionsContainer.getAttribute("data-filter-category")
-    this.currentDisplayState = store.filterDisplayStatus[this.filterCategory]
-  }
-
-  // When opening a new filter menu or input, makes sure any other filter menu opened is being closed before opening the new one
-  static filtersStateListener = () => {
-    const filtersButtons = document.querySelectorAll(
-      "[data-filter-visible].top-filters_suggestions-container"
-    )
-    for (let button of filtersButtons) {
-      const buttonCategory = button.getAttribute("data-filter-category")
-      button.previousElementSibling.innerHTML = new chevronIcon().updateChevronIcon("chevron-down")
-      button.setAttribute("data-filter-visible", false)
-      store.filterDisplayStatus[buttonCategory] = false
-      // When closing filter menu, sets category name back as placeholder
-      const newPlaceholder = Utils.getTopFiltersDisplayNames(buttonCategory)
-      const filterInput = document.querySelector(`.top-filters_${buttonCategory}`)
-      filterInput.setAttribute("data-active-filter", "false")
-      filterInput.setAttribute("placeholder", `${newPlaceholder}`)
-    }
-  }
-
-  // Gets the current display state of the targetted filter. If it is already being displayed, hides it. If not, displays it.
-  manageState() {
-    filterButtonState.filtersStateListener()
-    if (this.currentDisplayState == false) {
-      // Opens selected menu
-      // Closes all filter menus
-      this.displayFilterList()
-    } else {
-      this.hideFilterList()
-    }
-  }
-
-  displayFilterList() {
-    Object.entries(store.filterDisplayStatus).forEach((filterCategory) => (filterCategory.value = false))
-    this.event.target.classList = "chevron-up"
-    this.chevron.innerHTML = new chevronIcon().updateChevronIcon("chevron-up")
-    this.filterSuggestionsContainer.setAttribute("data-filter-visible", true)
-    store.filterDisplayStatus[this.filterCategory] = true
-    const newPlaceholder = Utils.getTopFiltersDisplayNames(this.filterCategory).toLowerCase()
-    const filterInput = document.querySelector(`.top-filters_${this.filterCategory}`)
-    filterInput.setAttribute(
-      "placeholder",
-      `Rechercher un ${newPlaceholder.slice(0, newPlaceholder.length - 1)}`
-    )
-    filterInput.setAttribute("data-active-filter", true)
-  }
-
-  hideFilterList() {
-    this.event.target.classList = "chevron-down"
-    this.chevron.innerHTML = new chevronIcon().updateChevronIcon("chevron-down")
-    this.filterSuggestionsContainer.setAttribute("data-filter-visible", false)
-    store.filterDisplayStatus[this.filterCategory] = false
-  }
-}
-
-// Affichage filtres sélectionnés : si valeur saisie par utilisateur !== undefined dans le dataset, l'ajouter au store filtres user quand appuie sur Entrée ou clique sur suggestion en dessous.

@@ -1,3 +1,4 @@
+import { displayWarning, hideWarning } from "../components/no-result-warning.js"
 import { store } from "../store/store.js"
 import { Utils } from "./Utils.js"
 
@@ -28,30 +29,6 @@ export class Search {
     this.searchMatchingTopFilters()
   }
 
-  // When user types in top filter inputs, hides items that do not match
-  searchMatchingIngredients(eventTarget) {
-    const matchingTopFilterElement = document.querySelectorAll(
-      `.top-filters_suggestions-${eventTarget.id}`
-    )
-    matchingTopFilterElement.forEach((el) => {
-      const elementNormalizedTextContent = Utils.formatStringCharacters(el.textContent)
-      elementNormalizedTextContent.includes(this.userInput) &&
-      !store.userSelectedFilters[eventTarget.id].includes(elementNormalizedTextContent)
-        ? this.displayTopFiltersElements(el)
-        : this.hideNonTopFiltersElements(el)
-    })
-  }
-
-  // Displays the top filter <li> element that is passed down as var (can be an element matching main search/top filter user input)
-  displayTopFiltersElements(element) {
-    element.setAttribute("data-filter-visible", true)
-  }
-
-  // Hides the top filter <li> element that is passed down as var
-  hideNonTopFiltersElements(element) {
-    element.setAttribute("data-filter-visible", false)
-  }
-
   // Displays/hides items listed in the top filters based on the recipes being displayed
   searchMatchingTopFilters() {
     const availableTags = document.querySelectorAll(".top-filters_suggestions-list li")
@@ -59,26 +36,31 @@ export class Search {
     availableTags.forEach((tag) => {
       tag.setAttribute("data-filter-visible", false)
     })
-    store.matchingRecipes.forEach((recipe) => {
-      let categoryToCheck = {
-        ingredients: recipe.ingredients,
-        ustensils: recipe.ustensils,
-        appliance: [recipe.appliance],
-      }
-      Object.entries(categoryToCheck).forEach(([key, value]) => {
-        if (key == "ingredients") key = "ingredient"
-        const targetEl = document.querySelectorAll(
-          `[data-filter-list-category="${key}"] .top-filters_suggestions-${key}`
-        )
-        targetEl.forEach((el) => {
-          if (value.includes(Utils.formatStringCharacters(el.textContent))
-          && !store.userSelectedFilters[key].includes(Utils.formatStringCharacters(el.textContent))
+    if (!Object.values(store.matchingRecipes).length == 0) {
+      hideWarning()
+      store.matchingRecipes.forEach((recipe) => {
+        let categoryToCheck = {
+          ingredients: recipe.ingredients,
+          ustensils: recipe.ustensils,
+          appliance: [recipe.appliance],
+        }
+        Object.entries(categoryToCheck).forEach(([key, value]) => {
+          if (key == "ingredients") key = "ingredient"
+          const targetEl = document.querySelectorAll(
+            `[data-filter-list-category="${key}"] .top-filters_suggestions-${key}`
           )
-          //console.log(store.userSelectedFilters[key].includes(Utils.formatStringCharacters(el.textContent)))
-            el.setAttribute("data-filter-visible", true)
+          targetEl.forEach((el) => {
+            if (
+              value.includes(Utils.formatStringCharacters(el.textContent)) &&
+              !store.userSelectedFilters[key].includes(Utils.formatStringCharacters(el.textContent))
+            )
+              el.setAttribute("data-filter-visible", true)
+          })
         })
       })
-    })
+    } else {
+      displayWarning()
+    }
   }
 
   getRecipesMatchingAddedTag(tagCategory) {
