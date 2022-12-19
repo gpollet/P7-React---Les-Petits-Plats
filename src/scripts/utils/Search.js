@@ -14,9 +14,8 @@ export class Search {
         recipe.description.includes(this.userInput) ||
         recipe.ingredients.toString().includes(this.userInput)
     )
-    mainSearchMatchingRecipes.forEach((el) => store.matchingRecipes.push(el))
+    store.matchingRecipes = mainSearchMatchingRecipes
     this.displayMatchingRecipeCards()
-    this.searchMatchingTopFilters()
   }
 
   displayMatchingRecipeCards() {
@@ -26,6 +25,7 @@ export class Search {
         ? card.setAttribute("data-display-recipe", true)
         : card.setAttribute("data-display-recipe", false)
     })
+    this.searchMatchingTopFilters()
   }
 
   // When user types in top filter inputs, hides items that do not match
@@ -75,15 +75,6 @@ export class Search {
         })
       })
     })
-
-    store.matchingRecipes.map((recipe) => {
-      //Object.entries(categoryToCheck).forEach((element) => {
-      //  element.map((entry) => {
-      //    //if (!matchingRecipesSuggestedTags.includes(entry))
-      //    //  matchingRecipesSuggestedTags = [...matchingRecipesSuggestedTags.flat(), entry]
-      //  })
-      //})
-    })
   }
 
   getRecipesMatchingAddedTag(tagCategory) {
@@ -92,12 +83,17 @@ export class Search {
       recipe[tagCategory].includes(this.userInput)
     )
     store.matchingRecipes = results
-    this.searchMatchingTopFilters()
     this.displayMatchingRecipeCards()
   }
 
   getRecipesMatchingRemovedTag(tagCategory) {
     store.matchingRecipes = store.recipesData
+    // Checks if main search input is empty. If not, sets matchingRecipes as the result of that search.
+    const searchBarContent = document.querySelector(".top-search_bar").value
+    if (searchBarContent.length >= 3) {
+      this.userInput = searchBarContent
+      this.getMainSearchMatchingRecipes()
+    }
     if (tagCategory == "ingredient") tagCategory = "ingredients"
     for (let keys of Object.keys(store.userSelectedFilters)) {
       // Checks if there are active tags
@@ -110,7 +106,6 @@ export class Search {
         }
       }
     }
-    this.searchMatchingTopFilters()
     this.displayMatchingRecipeCards()
   }
 }
