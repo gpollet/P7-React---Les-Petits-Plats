@@ -20,12 +20,11 @@ export function displayHome(data) {
   data.map((recipe) => {
     new Recipe(recipe).displayRecipeCard(recipeListContainer)
     createStoreDataset(recipe)
-    //getRecipesKeywords(recipe)
   })
   Utils.sortData(store.dataset)
   createTopFilters()
   createTopFiltersInputsEvents()
-  normalizeDatasetValues()
+  //normalizeDatasetValues()
   store.matchingRecipes = [...store.recipesData]
 }
 
@@ -70,11 +69,11 @@ function createStoreDataset(data) {
 //  recipesTitlesKeywords.push(recipeKeywords)
 //}
 
-function normalizeDatasetValues() {
-  for (let [key] of Object.entries(store.dataset)) {
-    store.dataset[key].forEach((value) => {
-      const ingredientIndex = store.dataset[key].indexOf(value)
-      store.dataset[key][ingredientIndex] = Utils.formatStringCharacters(value)
-    })
-  }
-}
+//function normalizeDatasetValues() {
+//  for (let [key] of Object.entries(store.dataset)) {
+//    store.dataset[key].forEach((value) => {
+//      const ingredientIndex = store.dataset[key].indexOf(value)
+//      store.dataset[key][ingredientIndex] = Utils.formatStringCharacters(value)
+//    })
+//  }
+//}
