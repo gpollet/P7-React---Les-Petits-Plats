@@ -31,6 +31,19 @@ export class Utils {
     let formattedString = string.toLowerCase().replace(string[0], string[0].toUpperCase())
     return formattedString
   }
+
+    // Split a single string into arrays containing a single keyword, and removes words shorter than 3 characters
+  static splitKeywords = (stringToSplit) => {
+    return stringToSplit.split(" ").filter((word) => word.length >= 3)
+  }
+
+// Checks if a keyword has already been identified for the recipe being processed.
+static checkKeywords = (keyword, keywordList) => {
+  keyword.map((el) => {
+    if (!keywordList.includes(el)) keywordList.push(el)
+    return keywordList
+  })
+}
 }
 
 // Returns a chevron up/down icon depending on the var being passed down

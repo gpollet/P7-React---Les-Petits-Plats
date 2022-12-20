@@ -6,7 +6,8 @@ export let store = {
   "userSelectedFilters": { ingredient: [], ustensils: [], appliance: [] },
   // Stores recipes' data that are relevant for the search function. Text is already normalized
   "recipesData": [],
-  "matchingRecipes": []
+  "matchingRecipes": [],
+  "recipesKeywordsList": []
 }
 
 //export const recipesTitlesKeywords = []
