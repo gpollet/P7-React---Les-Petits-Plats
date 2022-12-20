@@ -1,3 +1,5 @@
+import { Search } from "./Search.js"
+
 export class Utils {
   // Converts a string to lower cases then replace diacritic and special characters with their ASCII counterpart
   static formatStringCharacters(string) {
@@ -32,18 +34,27 @@ export class Utils {
     return formattedString
   }
 
-    // Split a single string into arrays containing a single keyword, and removes words shorter than 3 characters
+  // Split a single string into arrays containing a single keyword, and removes words shorter than 3 characters
   static splitKeywords = (stringToSplit) => {
     return stringToSplit.split(" ").filter((word) => word.length >= 3)
   }
 
-// Checks if a keyword has already been identified for the recipe being processed.
-static checkKeywords = (keyword, keywordList) => {
-  keyword.map((el) => {
-    if (!keywordList.includes(el)) keywordList.push(el)
-    return keywordList
-  })
-}
+  // Checks if a keyword has already been identified for the recipe being processed.
+  static checkKeywords = (keyword, keywordList) => {
+    keyword.map((el) => {
+      if (!keywordList.includes(el)) keywordList.push(el)
+      return keywordList
+    })
+  }
+
+  static benchmarkPerformances = async (searchBarValue) => {
+    console.time("Option 1")
+    for (let i = 0; i < 1000; i++) new Search(searchBarValue).getMainSearchMatchingRecipesA(true)
+    console.timeEnd("Option 1")
+    console.time("Option 2")
+    for (let i = 0; i < 1000; i++) new Search(searchBarValue).getMainSearchMatchingRecipesB(true)
+    console.timeEnd("Option 2")
+  }
 }
 
 // Returns a chevron up/down icon depending on the var being passed down

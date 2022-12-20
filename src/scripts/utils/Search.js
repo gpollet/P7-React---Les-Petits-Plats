@@ -7,9 +7,9 @@ export class Search {
     this.userInput = Utils.formatStringCharacters(value)
   }
 
-  /*
+  
   // Main search Option 1
-  getMainSearchMatchingRecipes() {
+  getMainSearchMatchingRecipesA(benchmarkMode = false) {
     // Finds recipes with title, ingredients or description matching user's input
     const mainSearchMatchingRecipes = store.recipesData.filter(
       (recipe) =>
@@ -18,19 +18,19 @@ export class Search {
         recipe.ingredients.toString().includes(this.userInput)
     )
     store.matchingRecipes = mainSearchMatchingRecipes
-    this.displayMatchingRecipeCards()
+    if (!benchmarkMode) this.displayMatchingRecipeCards()
   }
-  */
+  
 
   // Main search Option 2
-  getMainSearchMatchingRecipes() {
+  getMainSearchMatchingRecipesB(benchmarkMode = "false") {
     const mainSearchMatchingRecipes = store.recipesKeywordsList.filter((recipe) => {
       if (recipe.keywords.filter((el) => el.includes(this.userInput)).length > 0) {
         let match = store.recipesData.find((matchingRecipe) => matchingRecipe.id == recipe.id)
         store.matchingRecipes.push(match)
       }
     })
-    this.displayMatchingRecipeCards()
+    if (!benchmarkMode) this.displayMatchingRecipeCards()
   }
 
   displayMatchingRecipeCards() {
