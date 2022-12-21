@@ -8,7 +8,7 @@ export class Search {
   }
 
   // Main search Option 1
-  getMainSearchMatchingRecipesA() {
+  getMainSearchMatchingRecipes() {
     // Finds recipes with title, ingredients or description matching user's input
     store.matchingRecipes = store.matchingRecipes.filter(
       (recipe) =>
@@ -18,15 +18,6 @@ export class Search {
     )
   }
 
-  // Main search Option 2
-  getMainSearchMatchingRecipesB() {
-    store.matchingRecipes = store.recipesKeywordsList.filter((recipe) => {
-      if (recipe.keywords.filter((el) => el.includes(this.userInput)).length > 0) {
-        return store.matchingRecipes.filter((matchingRecipe) => matchingRecipe.id == recipe.id)
-      }
-    })
-  }
-
   getRecipesMatchingTagsAndSearch(tagCategory) {
     // On each input, resets matchingRecipes (otherwise it would keep matching recipes from previous inputs)
     store.matchingRecipes = store.recipesData
@@ -34,7 +25,7 @@ export class Search {
     const searchBarContent = document.querySelector(".top-search_bar").value
     if (searchBarContent.length >= 3) {
       this.userInput = searchBarContent
-      this.getMainSearchMatchingRecipesB()
+      this.getMainSearchMatchingRecipes()
     }
     if (tagCategory == "ingredient") tagCategory = "ingredients"
     // Checks if there are active tags
