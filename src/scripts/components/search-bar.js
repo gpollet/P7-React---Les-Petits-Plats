@@ -12,11 +12,9 @@ function searchBarEventListener() {
   searchBar.addEventListener("input", () => {
     // On each input, resets matchingRecipes (otherwise it would keep matching recipes from previous inputs) if there is no active Tag
 
-    // A  DEBUG
     if (!Utils.userHasActiveTags()) {
       store.matchingRecipes = store.recipesData
     }
-    // A DEBUG
     
     if (searchBar.value.length >= 3) {
       new Search(searchBar.value).getRecipesMatchingRemovedTag()
