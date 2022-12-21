@@ -76,6 +76,6 @@ function createRecipesKeywordsList() {
     recipeDescription.forEach((keyword) => {
       Utils.checkKeywords(recipeDescription, recipeKeywords)
     })
-    store.recipesKeywordsList.push({ id: recipe.id, keywords: recipeKeywords })
+    store.recipesKeywordsList.push({ id: recipe.id, keywords: recipeKeywords, ingredients: recipe.ingredients, ustensils: recipe.ustensils, appliance: recipe.appliance })
   })
 }

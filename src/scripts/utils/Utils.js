@@ -48,15 +48,6 @@ export class Utils {
     })
   }
 
-  static benchmarkPerformances = async (searchBarValue) => {
-    console.time("Option 1")
-    for (let i = 0; i < 1000; i++) new Search(searchBarValue).getMainSearchMatchingRecipesA(true)
-    console.timeEnd("Option 1")
-    console.time("Option 2")
-    for (let i = 0; i < 1000; i++) new Search(searchBarValue).getMainSearchMatchingRecipesB(true)
-    console.timeEnd("Option 2")
-  }
-
   static userHasActiveTags () {
     let userHasActiveTag = false
     for (let keys of Object.keys(store.userSelectedFilters)) {

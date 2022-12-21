@@ -47,7 +47,7 @@ export class Tag {
         store.userSelectedFilters[this.category] = store.userSelectedFilters[this.category].filter(
           (el) => el !== Utils.formatStringCharacters(this.item)
         )
-        new Search(this.item).getRecipesMatchingRemovedTag(this.category)
+        new Search(this.item).getRecipesMatchingTagsAndSearch(this.category)
         activeFilterButton.remove()
         this.suggestedElement.setAttribute("data-filter-visible", true)
       }

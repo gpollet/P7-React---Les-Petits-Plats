@@ -8,32 +8,44 @@ export class Search {
   }
 
   // Main search Option 1
-  getMainSearchMatchingRecipesA(benchmarkMode = false) {
+  getMainSearchMatchingRecipesA() {
     // Finds recipes with title, ingredients or description matching user's input
-    let arrayToFilter
-    if (!Utils.userHasActiveTags) {
-      arrayToFilter = store.recipesData
-    } else {
-    arrayToFilter = store.matchingRecipes 
-    }
-    store.matchingRecipes = arrayToFilter.filter(
+    store.matchingRecipes = store.matchingRecipes.filter(
       (recipe) =>
         recipe.name.includes(this.userInput) ||
         recipe.description.includes(this.userInput) ||
         recipe.ingredients.toString().includes(this.userInput)
     )
-    if (!benchmarkMode) Search.displayMatchingRecipeCards()
   }
 
   // Main search Option 2
-  getMainSearchMatchingRecipesB(benchmarkMode = "false") {
-    const mainSearchMatchingRecipes = store.recipesKeywordsList.filter((recipe) => {
+  getMainSearchMatchingRecipesB() {
+    store.matchingRecipes = store.recipesKeywordsList.filter((recipe) => {
       if (recipe.keywords.filter((el) => el.includes(this.userInput)).length > 0) {
-        let match = store.recipesData.find((matchingRecipe) => matchingRecipe.id == recipe.id)
-        store.matchingRecipes.push(match)
+        return store.matchingRecipes.filter((matchingRecipe) => matchingRecipe.id == recipe.id)
       }
     })
-    if (!benchmarkMode) Search.displayMatchingRecipeCards()
+  }
+
+  getRecipesMatchingTagsAndSearch(tagCategory) {
+    // On each input, resets matchingRecipes (otherwise it would keep matching recipes from previous inputs)
+    store.matchingRecipes = store.recipesData
+    // Checks if main search input is empty. If not and length > 3 characters, display cards matching the input
+    const searchBarContent = document.querySelector(".top-search_bar").value
+    if (searchBarContent.length >= 3) {
+      this.userInput = searchBarContent
+      this.getMainSearchMatchingRecipesB()
+    }
+    if (tagCategory == "ingredient") tagCategory = "ingredients"
+    // Checks if there are active tags
+    if (Utils.userHasActiveTags)
+      for (let [key] of Object.entries(store.userSelectedFilters)) {
+        for (let value of Object.values(store.userSelectedFilters[key])) {
+          this.userInput = value
+          return this.getRecipesMatchingAddedTag(key)
+        }
+      }
+    Search.displayMatchingRecipeCards()
   }
 
   static displayMatchingRecipeCards() {
@@ -86,26 +98,6 @@ export class Search {
       recipe[tagCategory].includes(this.userInput)
     )
     store.matchingRecipes = results
-    Search.displayMatchingRecipeCards()
-  }
-
-  getRecipesMatchingRemovedTag(tagCategory) {
-    store.matchingRecipes = store.recipesData
-    // Checks if main search input is empty. If not, sets matchingRecipes as the result of that search.
-    const searchBarContent = document.querySelector(".top-search_bar").value
-    if (searchBarContent.length >= 3) {
-      this.userInput = searchBarContent
-      this.getMainSearchMatchingRecipesA()
-    }
-    if (tagCategory == "ingredient") tagCategory = "ingredients"
-    // Checks if there are active tags
-    if (Utils.userHasActiveTags)
-      for (let [key] of Object.entries(store.userSelectedFilters)) {
-        for (let value of Object.values(store.userSelectedFilters[key])) {
-          this.userInput = value
-          return this.getRecipesMatchingAddedTag(key)
-        }
-      }
     Search.displayMatchingRecipeCards()
   }
 }
