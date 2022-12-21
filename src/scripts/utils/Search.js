@@ -7,30 +7,59 @@ export class Search {
     this.userInput = Utils.formatStringCharacters(value)
   }
 
-  getMainSearchMatchingRecipes() {
+  // Main search Option 1
+  getMainSearchMatchingRecipesA() {
     // Finds recipes with title, ingredients or description matching user's input
-    const mainSearchMatchingRecipes = store.recipesData.filter(
+    store.matchingRecipes = store.matchingRecipes.filter(
       (recipe) =>
         recipe.name.includes(this.userInput) ||
         recipe.description.includes(this.userInput) ||
         recipe.ingredients.toString().includes(this.userInput)
     )
-    store.matchingRecipes = mainSearchMatchingRecipes
-    this.displayMatchingRecipeCards()
   }
 
-  displayMatchingRecipeCards() {
+  // Main search Option 2
+  getMainSearchMatchingRecipesB() {
+    store.matchingRecipes = store.recipesKeywordsList.filter((recipe) => {
+      if (recipe.keywords.filter((el) => el.includes(this.userInput)).length > 0) {
+        return store.matchingRecipes.filter((matchingRecipe) => matchingRecipe.id == recipe.id)
+      }
+    })
+  }
+
+  getRecipesMatchingTagsAndSearch(tagCategory) {
+    // On each input, resets matchingRecipes (otherwise it would keep matching recipes from previous inputs)
+    store.matchingRecipes = store.recipesData
+    // Checks if main search input is empty. If not and length > 3 characters, display cards matching the input
+    const searchBarContent = document.querySelector(".top-search_bar").value
+    if (searchBarContent.length >= 3) {
+      this.userInput = searchBarContent
+      this.getMainSearchMatchingRecipesB()
+    }
+    if (tagCategory == "ingredient") tagCategory = "ingredients"
+    // Checks if there are active tags
+    if (Utils.userHasActiveTags)
+      for (let [key] of Object.entries(store.userSelectedFilters)) {
+        for (let value of Object.values(store.userSelectedFilters[key])) {
+          this.userInput = value
+          return this.getRecipesMatchingAddedTag(key)
+        }
+      }
+    Search.displayMatchingRecipeCards()
+  }
+
+  static displayMatchingRecipeCards() {
     const recipeCards = document.querySelectorAll(".recipe-card_container")
     recipeCards.forEach((card) => {
       store.matchingRecipes.find((recipe) => recipe.id == card.getAttribute("data-card-id"))
         ? card.setAttribute("data-display-recipe", true)
         : card.setAttribute("data-display-recipe", false)
     })
-    this.searchMatchingTopFilters()
+    Search.searchMatchingTopFilters()
   }
 
   // Displays/hides items listed in the top filters based on the recipes being displayed
-  searchMatchingTopFilters() {
+  static searchMatchingTopFilters() {
     const availableTags = document.querySelectorAll(".top-filters_suggestions-list li")
     // Hide all available tags, and if they match the displayed recipes, sets their visibility back to true
     availableTags.forEach((tag) => {
@@ -69,29 +98,6 @@ export class Search {
       recipe[tagCategory].includes(this.userInput)
     )
     store.matchingRecipes = results
-    this.displayMatchingRecipeCards()
-  }
-
-  getRecipesMatchingRemovedTag(tagCategory) {
-    store.matchingRecipes = store.recipesData
-    // Checks if main search input is empty. If not, sets matchingRecipes as the result of that search.
-    const searchBarContent = document.querySelector(".top-search_bar").value
-    if (searchBarContent.length >= 3) {
-      this.userInput = searchBarContent
-      this.getMainSearchMatchingRecipes()
-    }
-    if (tagCategory == "ingredient") tagCategory = "ingredients"
-    for (let keys of Object.keys(store.userSelectedFilters)) {
-      // Checks if there are active tags
-      if (store.userSelectedFilters[keys].length > 0) {
-        for (let [key] of Object.entries(store.userSelectedFilters)) {
-          for (let value of Object.values(store.userSelectedFilters[key])) {
-            this.userInput = value
-            return this.getRecipesMatchingAddedTag(key)
-          }
-        }
-      }
-    }
-    this.displayMatchingRecipeCards()
+    Search.displayMatchingRecipeCards()
   }
 }

@@ -1,3 +1,6 @@
+import { store } from "../store/store.js"
+import { Search } from "./Search.js"
+
 export class Utils {
   // Converts a string to lower cases then replace diacritic and special characters with their ASCII counterpart
   static formatStringCharacters(string) {
@@ -30,6 +33,29 @@ export class Utils {
   static stringFirstLetterToUpperCase(string) {
     let formattedString = string.toLowerCase().replace(string[0], string[0].toUpperCase())
     return formattedString
+  }
+
+  // Split a single string into arrays containing a single keyword, and removes words shorter than 3 characters
+  static splitKeywords = (stringToSplit) => {
+    return stringToSplit.split(" ").filter((word) => word.length >= 3)
+  }
+
+  // Checks if a keyword has already been identified for the recipe being processed.
+  static checkKeywords = (keyword, keywordList) => {
+    keyword.map((el) => {
+      if (!keywordList.includes(el)) keywordList.push(el)
+      return keywordList
+    })
+  }
+
+  static userHasActiveTags () {
+    let userHasActiveTag = false
+    for (let keys of Object.keys(store.userSelectedFilters)) {
+      if (store.userSelectedFilters[keys].length > 0) {
+        userHasActiveTag = true
+      }
+    }
+    return userHasActiveTag
   }
 }
 

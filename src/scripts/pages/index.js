@@ -1,7 +1,11 @@
 import { Tag } from "../models/Tag.js"
 import { createHeader } from "../components/header.js"
 import { createSearchBar } from "../components/search-bar.js"
-import { createRecipeFilters, createTopFilters, createTopFiltersInputsEvents } from "../components/top-filters.js"
+import {
+  createRecipeFilters,
+  createTopFilters,
+  createTopFiltersInputsEvents,
+} from "../components/top-filters.js"
 import { Recipe } from "../models/Recipe.js"
 import { store } from "../store/store.js"
 import { Utils } from "../utils/Utils.js"
@@ -24,8 +28,9 @@ export function displayHome(data) {
   Utils.sortData(store.dataset)
   createTopFilters()
   createTopFiltersInputsEvents()
-  //normalizeDatasetValues()
   store.matchingRecipes = [...store.recipesData]
+  // Search option 2 :
+  createRecipesKeywordsList()
 }
 
 // Creates a list of all possible ingredients, appliances and ustensils based on the recipes data
@@ -57,23 +62,20 @@ function createStoreDataset(data) {
   }
 }
 
-//// In each recipe names, filters out words shorter than 3 letters, then create a sublist of strings for each remaining words.
-//function getRecipesKeywords(recipe) {
-//  const keywords = recipe.name.split(" ")
-//  let recipeKeywords = { id: recipe.id, keywords: [] }
-//  const keyword = keywords.map((keyword) => {
-//    if (keyword.length >= 3) {
-//      recipeKeywords.keywords.push(Utils.formatStringCharacters(keyword))
-//    }
-//  })
-//  recipesTitlesKeywords.push(recipeKeywords)
-//}
-
-//function normalizeDatasetValues() {
-//  for (let [key] of Object.entries(store.dataset)) {
-//    store.dataset[key].forEach((value) => {
-//      const ingredientIndex = store.dataset[key].indexOf(value)
-//      store.dataset[key][ingredientIndex] = Utils.formatStringCharacters(value)
-//    })
-//  }
-//}
+function createRecipesKeywordsList() {
+  // Split a single string into arrays containing a single keyword, and removes words shorter than 3 characters
+  store.recipesData.map((recipe) => {
+    const recipeKeywords = []
+    const recipeName = Utils.splitKeywords(recipe.name)
+    Utils.checkKeywords(recipeName, recipeKeywords)
+    recipe.ingredients.forEach((ingredient) => {
+      const ingredientsArrays = Utils.splitKeywords(ingredient)
+      Utils.checkKeywords(ingredientsArrays, recipeKeywords)
+    })
+    const recipeDescription = Utils.splitKeywords(recipe.description)
+    recipeDescription.forEach((keyword) => {
+      Utils.checkKeywords(recipeDescription, recipeKeywords)
+    })
+    store.recipesKeywordsList.push({ id: recipe.id, keywords: recipeKeywords, ingredients: recipe.ingredients, ustensils: recipe.ustensils, appliance: recipe.appliance })
+  })
+}
