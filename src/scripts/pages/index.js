@@ -28,8 +28,7 @@ export function displayHome(data) {
   Utils.sortData(store.dataset)
   createTopFilters()
   createTopFiltersInputsEvents()
-  // Search option 1 :
-  //store.matchingRecipes = [...store.recipesData]
+  store.matchingRecipes = [...store.recipesData]
   // Search option 2 :
   createRecipesKeywordsList()
 }

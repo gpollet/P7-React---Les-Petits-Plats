@@ -7,20 +7,23 @@ export class Search {
     this.userInput = Utils.formatStringCharacters(value)
   }
 
-  
   // Main search Option 1
   getMainSearchMatchingRecipesA(benchmarkMode = false) {
     // Finds recipes with title, ingredients or description matching user's input
-    const mainSearchMatchingRecipes = store.recipesData.filter(
+    let arrayToFilter
+    if (!Utils.userHasActiveTags) {
+      arrayToFilter = store.recipesData
+    } else {
+    arrayToFilter = store.matchingRecipes 
+    }
+    store.matchingRecipes = arrayToFilter.filter(
       (recipe) =>
         recipe.name.includes(this.userInput) ||
         recipe.description.includes(this.userInput) ||
         recipe.ingredients.toString().includes(this.userInput)
     )
-    store.matchingRecipes = mainSearchMatchingRecipes
-    if (!benchmarkMode) this.displayMatchingRecipeCards()
+    if (!benchmarkMode) Search.displayMatchingRecipeCards()
   }
-  
 
   // Main search Option 2
   getMainSearchMatchingRecipesB(benchmarkMode = "false") {
@@ -30,21 +33,21 @@ export class Search {
         store.matchingRecipes.push(match)
       }
     })
-    if (!benchmarkMode) this.displayMatchingRecipeCards()
+    if (!benchmarkMode) Search.displayMatchingRecipeCards()
   }
 
-  displayMatchingRecipeCards() {
+  static displayMatchingRecipeCards() {
     const recipeCards = document.querySelectorAll(".recipe-card_container")
     recipeCards.forEach((card) => {
       store.matchingRecipes.find((recipe) => recipe.id == card.getAttribute("data-card-id"))
         ? card.setAttribute("data-display-recipe", true)
         : card.setAttribute("data-display-recipe", false)
     })
-    this.searchMatchingTopFilters()
+    Search.searchMatchingTopFilters()
   }
 
   // Displays/hides items listed in the top filters based on the recipes being displayed
-  searchMatchingTopFilters() {
+  static searchMatchingTopFilters() {
     const availableTags = document.querySelectorAll(".top-filters_suggestions-list li")
     // Hide all available tags, and if they match the displayed recipes, sets their visibility back to true
     availableTags.forEach((tag) => {
@@ -83,7 +86,7 @@ export class Search {
       recipe[tagCategory].includes(this.userInput)
     )
     store.matchingRecipes = results
-    this.displayMatchingRecipeCards()
+    Search.displayMatchingRecipeCards()
   }
 
   getRecipesMatchingRemovedTag(tagCategory) {
@@ -92,20 +95,17 @@ export class Search {
     const searchBarContent = document.querySelector(".top-search_bar").value
     if (searchBarContent.length >= 3) {
       this.userInput = searchBarContent
-      this.getMainSearchMatchingRecipes()
+      this.getMainSearchMatchingRecipesA()
     }
     if (tagCategory == "ingredient") tagCategory = "ingredients"
-    for (let keys of Object.keys(store.userSelectedFilters)) {
-      // Checks if there are active tags
-      if (store.userSelectedFilters[keys].length > 0) {
-        for (let [key] of Object.entries(store.userSelectedFilters)) {
-          for (let value of Object.values(store.userSelectedFilters[key])) {
-            this.userInput = value
-            return this.getRecipesMatchingAddedTag(key)
-          }
+    // Checks if there are active tags
+    if (Utils.userHasActiveTags)
+      for (let [key] of Object.entries(store.userSelectedFilters)) {
+        for (let value of Object.values(store.userSelectedFilters[key])) {
+          this.userInput = value
+          return this.getRecipesMatchingAddedTag(key)
         }
       }
-    }
-    this.displayMatchingRecipeCards()
+    Search.displayMatchingRecipeCards()
   }
 }

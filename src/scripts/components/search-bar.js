@@ -10,25 +10,19 @@ export function createSearchBar(container) {
 function searchBarEventListener() {
   const searchBar = document.querySelector(".top-search_bar")
   searchBar.addEventListener("input", () => {
-    // On each input, resets matchingRecipes (otherwise it would keep matching recipes from previous inputs)
-    store.matchingRecipes = []
+    // On each input, resets matchingRecipes (otherwise it would keep matching recipes from previous inputs) if there is no active Tag
+    if (!Utils.userHasActiveTags()) store.matchingRecipes = store.recipesData
     if (searchBar.value.length >= 3) {
       new Search(searchBar.value).getMainSearchMatchingRecipesA()
+      // Integrated benchmark function, comparing the two search options by typing "benchmark" + keywords in the search bar
       if (searchBar.value.includes("benchmark")) {
-        let stringToBenchmark = searchBar.value.replace("benchmark", "")
+        const stringToBenchmark = searchBar.value.replace("benchmark", "")
         Utils.benchmarkPerformances(stringToBenchmark)
       }
     } else {
-      // Makes sure recipes are visible again if user input is < 3 characters, and resets matchingRecipes
-      store.matchingRecipes = store.recipesData
-      document.querySelectorAll(".recipe-card_container").forEach((card) => {
-        card.setAttribute("data-display-recipe", true)
-      })
-      // If user input in main search bar is < 3 characters, displays all suggested items in the top filters
-      const topFiltersLists = document.querySelectorAll(".top-filters_suggestions-list li")
-      for (let element of topFiltersLists) {
-        element.setAttribute("data-filter-visible", true)
-      }
+      // If input is < 3 characters, but user has active tags, search recipes matching the tags
+      if (Utils.userHasActiveTags()) new Search(searchBar.value).getRecipesMatchingRemovedTag()
+      Search.displayMatchingRecipeCards()
     }
   })
 }

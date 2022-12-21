@@ -1,3 +1,4 @@
+import { store } from "../store/store.js"
 import { Search } from "./Search.js"
 
 export class Utils {
@@ -54,6 +55,16 @@ export class Utils {
     console.time("Option 2")
     for (let i = 0; i < 1000; i++) new Search(searchBarValue).getMainSearchMatchingRecipesB(true)
     console.timeEnd("Option 2")
+  }
+
+  static userHasActiveTags () {
+    let userHasActiveTag = false
+    for (let keys of Object.keys(store.userSelectedFilters)) {
+      if (store.userSelectedFilters[keys].length > 0) {
+        userHasActiveTag = true
+      }
+    }
+    return userHasActiveTag
   }
 }
 
