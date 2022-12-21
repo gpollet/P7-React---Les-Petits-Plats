@@ -11,8 +11,15 @@ function searchBarEventListener() {
   const searchBar = document.querySelector(".top-search_bar")
   searchBar.addEventListener("input", () => {
     // On each input, resets matchingRecipes (otherwise it would keep matching recipes from previous inputs) if there is no active Tag
-    if (!Utils.userHasActiveTags()) store.matchingRecipes = store.recipesData
+
+    // A  DEBUG
+    if (!Utils.userHasActiveTags()) {
+      store.matchingRecipes = store.recipesData
+    }
+    // A DEBUG
+    
     if (searchBar.value.length >= 3) {
+      new Search(searchBar.value).getRecipesMatchingRemovedTag()
       new Search(searchBar.value).getMainSearchMatchingRecipesA()
       // Integrated benchmark function, comparing the two search options by typing "benchmark" + keywords in the search bar
       if (searchBar.value.includes("benchmark")) {
