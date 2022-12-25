@@ -7,19 +7,7 @@ export class Search {
     this.userInput = Utils.formatStringCharacters(value)
   }
 
-  // Main search Option 1
-  getMainSearchMatchingRecipesA() {
-    // Finds recipes with title, ingredients or description matching user's input
-    store.matchingRecipes = store.matchingRecipes.filter(
-      (recipe) =>
-        recipe.name.includes(this.userInput) ||
-        recipe.description.includes(this.userInput) ||
-        recipe.ingredients.toString().includes(this.userInput)
-    )
-  }
-
-  // Main search Option 2
-  getMainSearchMatchingRecipesB() {
+  getMainSearchMatchingRecipes() {
     store.matchingRecipes = store.recipesKeywordsList.filter((recipe) => {
       if (recipe.keywords.filter((el) => el.includes(this.userInput)).length > 0) {
         return store.matchingRecipes.filter((matchingRecipe) => matchingRecipe.id == recipe.id)
@@ -33,8 +21,7 @@ export class Search {
     // Checks if main search input is empty. If not and length > 3 characters, display cards matching the input
     const searchBarContent = document.querySelector(".top-search_bar").value
     if (searchBarContent.length >= 3) {
-      this.userInput = searchBarContent
-      this.getMainSearchMatchingRecipesB()
+      this.getMainSearchMatchingRecipes()
     }
     if (tagCategory == "ingredient") tagCategory = "ingredients"
     // Checks if there are active tags
