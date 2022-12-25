@@ -21,7 +21,6 @@ export class Search {
     // Checks if main search input is empty. If not and length > 3 characters, display cards matching the input
     const searchBarContent = document.querySelector(".top-search_bar").value
     if (searchBarContent.length >= 3) {
-      this.userInput = searchBarContent
       this.getMainSearchMatchingRecipes()
     }
     if (tagCategory == "ingredient") tagCategory = "ingredients"
