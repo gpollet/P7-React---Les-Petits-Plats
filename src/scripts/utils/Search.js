@@ -33,7 +33,7 @@ export class Search {
       for (let [key] of Object.entries(store.userSelectedFilters)) {
         for (let value of Object.values(store.userSelectedFilters[key])) {
           this.userInput = value
-          return this.getRecipesMatchingAddedTag(key)
+          this.getRecipesMatchingAddedTag(key)
         }
       }
     Search.displayMatchingRecipeCards()
